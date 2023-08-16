@@ -3,19 +3,15 @@ use std::path::Path;
 
 pub struct AppData {
     pub app_root_files: Vec<String>,
-    pub public_files: Vec<String>,
-    pub get_files: Vec<String>,
-    pub post_files: Vec<String>,
-    pub put_files: Vec<String>,
+    pub pages_files: Vec<String>,
+    pub api_files: Vec<String>,
 }
 
 pub fn app_folder(app_folder_path: &str) -> std::io::Result<AppData> {
     let mut app_data = AppData {
         app_root_files: Vec::new(),
-        public_files: Vec::new(),
-        get_files: Vec::new(),
-        post_files: Vec::new(),
-        put_files: Vec::new(),
+        pages_files: Vec::new(),
+        api_files: Vec::new(),
     };
 
     let entries = fs::read_dir(app_folder_path)?;
@@ -27,22 +23,26 @@ pub fn app_folder(app_folder_path: &str) -> std::io::Result<AppData> {
         if path.is_file() {
             let file_name = path.file_name().unwrap().to_string_lossy().to_string();
 
-            if path.starts_with(Path::new(app_folder_path).join("public")) {
+            if path.starts_with(Path::new(app_folder_path).join("pages")) {
                 if let Ok(relative_path) = path.strip_prefix(app_folder_path) {
-                    app_data.public_files.push(relative_path.to_string_lossy().to_string());
+                    app_data.pages_files.push(relative_path.to_string_lossy().to_string());
                 }
             } else {
                 app_data.app_root_files.push(file_name);
             }
+
         } else if path.is_dir() {
             let dir_name = path.file_name().unwrap().to_string_lossy();
 
             match dir_name.as_ref() {
-                "get" | "post" | "put" => {
+                "static" => {
                     collect_files(&path, &mut app_data, dir_name.as_ref())?;
                 }
-                "public" => {
-                    traverse_recursive(&path, &mut app_data.public_files, &path)?;
+                "pages" => {
+                    traverse_recursive(&path, &mut app_data.pages_files, &path)?;
+                }
+                "api" => {
+                    traverse_recursive(&path, &mut app_data.api_files, &path)?;
                 }
                 _ => (),
             }
@@ -55,9 +55,7 @@ pub fn app_folder(app_folder_path: &str) -> std::io::Result<AppData> {
 fn collect_files(folder_path: &Path, app_data: &mut AppData, category: &str) -> std::io::Result<()> {
     if let Ok(entries) = fs::read_dir(folder_path) {
         let files = match category {
-            "get" => &mut app_data.get_files,
-            "post" => &mut app_data.post_files,
-            "put" => &mut app_data.put_files,
+            "api" => &mut app_data.api_files,
             _ => return Ok(()),
         };
 

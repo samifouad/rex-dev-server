@@ -12,33 +12,33 @@ pub struct Route {
 
 #[derive(Debug, Clone)]
 pub struct Http {
-    pub get_routes: Vec<Route>,
-    //post_routes: Vec<Route>
+    pub html_routes: Vec<Route>,
+    pub api_routes: Vec<Route>
 }
 
 impl Http {
     pub fn new() -> Self {
         Self { 
-            get_routes: Vec::new(),
-            //post_routes: Vec::new(),
+            html_routes: Vec::new(),
+            api_routes: Vec::new(),
         }
     }
 
-    pub fn get(&mut self, path: &str, file: &str) {
+    pub fn html(&mut self, path: &str, file: &str) {
         let route = Route {
             path: path.to_string(),
             file: file.to_string()
         };
-        self.get_routes.push(route);
+        self.html_routes.push(route);
     }
 
-    // pub fn post(&mut self, path: &str, file: &str) {
-    //     let route = Route {
-    //         path: path.to_string(),
-    //         file: file.to_string()
-    //     };
-    //     self.post_routes.push(route);
-    // }
+    pub fn api(&mut self, path: &str, file: &str) {
+        let route = Route {
+            path: path.to_string(),
+            file: file.to_string()
+        };
+        self.api_routes.push(route);
+    }
 }
 
 #[derive(Clone, Debug)]
@@ -68,10 +68,10 @@ async fn router(
     Ok(Response::new(Body::from("Hello World")))
 }
 
-pub async fn start(get_routes: Vec<Route>) {
+pub async fn start(http_routes: Vec<Route>) {
 
     let app_context = AppContext {
-        routes: get_routes.clone()
+        routes: http_routes.clone()
     };
 
     // Construct our SocketAddr to listen on...

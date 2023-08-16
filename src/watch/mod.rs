@@ -2,7 +2,7 @@ use notify::{Watcher, RecursiveMode, watcher, DebouncedEvent};
 use std::sync::mpsc::channel;
 use std::time::Duration;
 
-pub fn writes (watch_path: String, port: i32) -> () {
+pub fn writes (watch_path: &str, port: &str) -> () {
 
     println!("hello from secondary thread");
     println!("port number is: {}", port);

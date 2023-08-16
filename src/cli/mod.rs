@@ -3,6 +3,14 @@
 #![allow(unused_imports)]
 #![allow(unused_assignments)]
 
+pub mod start;
+pub mod init;
+pub mod tree;
+pub mod route;
+pub mod build;
+pub mod deploy;
+
+#[derive(Debug, Clone)]
 pub struct Args {
     pub flags: std::collections::HashMap<String, bool>,
     pub params: std::collections::HashMap<String, String>,
@@ -80,97 +88,6 @@ pub fn version () {
 
 pub fn update () {
     println!("this will check for updates and offer the ability to run the update. not yet implemented. \n");
-}
-
-pub async fn start (context: &Args) {
-
-    // defaults
-    let mut init_port = "9001";
-    let mut init_folder = "./app";
-    let mut init_mode = "dev";
-
-    // override defaults if param provided
-    if let Some(port) = context.params.get("--port") {
-        init_port = port;
-    }
-
-    if let Some(mode) = context.params.get("--mode") {
-        init_mode = mode;
-    }
-
-    if let Some (folder) = context.params.get("--folder") {
-        init_folder = folder;
-    }
-    
-    let app_data = crate::harvest::app_folder(init_folder).unwrap();
-
-    println!("appRoot files: {:?}", app_data.app_root_files);
-    println!("Public files: {:?}", app_data.public_files);
-    println!("GET files: {:?}", app_data.get_files);
-    println!("POST files: {:?}", app_data.post_files);
-    println!("PUT files: {:?}", app_data.put_files);
-
-     //setup server on main thread
-     let mut app = crate::http::Http::new();
-
-     // define routes
-     app.get("/index.html", "/dist/index.html");
-     app.get("/favicon.ico", "/dist/favicon.ico");
-     app.get("/test", "/dist/404.html");
- 
-     let routes = app.get_routes;
- 
-     // handle requests
-     crate::http::start(routes).await
-}
-
-pub fn tree (context: &Args) {
-
-    // defaults
-    let mut init_folder = "./app";
-
-    if let Some (folder) = context.params.get("--folder") {
-        init_folder = folder;
-    }
-    
-    let app_data = crate::harvest::app_folder(init_folder).unwrap();
-
-    println!("appRoot files: {:?}", app_data.app_root_files);
-    println!("Public files: {:?}", app_data.public_files);
-    println!("GET files: {:?}", app_data.get_files);
-    println!("POST files: {:?}", app_data.post_files);
-    println!("PUT files: {:?}", app_data.put_files);
-}
-
-pub fn route (context: &Args) {
-
-    for (key, value) in context.params.iter() {
-        println!("Key: {}, Value: {}", key, value);
-    }
-    //println!("inspecting route {}", path.unwrap_or(&"/".to_string()));
-}
-
-pub fn init (context: &Args) {
-
-    for (key, value) in context.params.iter() {
-        println!("Key: {}, Value: {}", key, value);
-    }
-    //println!("initializing new project folder at {}", path.unwrap_or(&"./app".to_string()));
-}
-
-pub fn build (context: &Args) {
-    for (key, value) in context.params.iter() {
-        println!("Key: {}, Value: {}", key, value);
-    }
-    println!("optimize project for production");
-}
-
-pub fn deploy (context: &Args) {
-
-    for (key, value) in context.params.iter() {
-        println!("Key: {}, Value: {}", key, value);
-    }
-    println!("deploy project to remote server");
 }
 
 pub fn error (msg: Option<&String>) {

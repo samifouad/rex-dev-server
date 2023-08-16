@@ -42,25 +42,20 @@ async fn main() -> () {
         match cmd_run.as_str() {
 
             // commands
-            "start" => cli::start(&cmd).await,
+            "start" => cli::start::cmd(cmd.clone()).await,
 
-            "init" => cli::init(&cmd),
+            "init" => cli::init::cmd(&cmd),
 
-            "tree" => cli::tree(&cmd),
+            "tree" => cli::tree::cmd(&cmd),
 
-            "route" => cli::route(&cmd),
+            "route" => cli::route::cmd(&cmd),
 
-            "build" => cli::build(&cmd),
+            "build" => cli::build::cmd(&cmd),
             
-            "deploy" => cli::deploy(&cmd),
+            "deploy" => cli::deploy::cmd(&cmd),
 
             // return generic error
             _ => cli::error(None)
         }
     }
-
-    // // separate thread to watch the filesystem & communicate with the main thread's http server
-    // thread::spawn(move || {
-    //     watch::writes(app_folder_path.to_string(), 8080);
-    // });
 }
