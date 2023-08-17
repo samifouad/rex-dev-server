@@ -30,38 +30,45 @@ pub async fn cmd (context: Args) {
     println!("Pages: {:?}", app_data.pages_files);
     println!("API routes: {:?}", app_data.api_files);
 
+    // static files
     let converted_paths: Vec<Option<(String, String)>> = app_data.pages_files
         .iter()
         .map(|path| convert_path(path.as_str()))
         .collect();
 
-    for option in converted_paths {
-        if let Some((input, output)) = option {
-            println!("{} -> {}", input, output);
-        }
-    }
-
-
+    // js api endpoints
     let converted_js_paths: Vec<Option<(String, String)>> = app_data.api_files
         .iter()
         .map(|jspath| convert_js_path(jspath.as_str()))
         .collect();
 
-    for option in converted_js_paths {
+    //setup server on main thread
+    let mut app = crate::http::Http::new();
+
+    // define routes
+    app.html("/", "app/index.html");
+    app.html("/index.html", "./app/index.html");
+    app.html("/favicon.ico", "./app/favicon.ico");
+    app.html("/404", "./app/404.html");
+
+    // attach static files to http server
+    for option in converted_paths {
         if let Some((input, output)) = option {
-            println!("{} -> {}", input, output);
+            app.html(output.as_str(), format!("./app/pages/{}", input).as_str());
         }
     }
 
-     //setup server on main thread
-     let mut app = crate::http::Http::new();
-
-     // define routes
-     app.html("/index.html", "/dist/index.html");
-     app.html("/favicon.ico", "/dist/favicon.ico");
-     app.html("/test", "/dist/404.html");
+    // attach js api endpoints to http server
+    for option in converted_js_paths {
+        if let Some((input, output)) = option {
+            app.api(output.as_str(), format!("./app/api/{}", input).as_str());
+        }
+    }
  
-     let routes = app.html_routes;
+    // combine routes into a single vector, supply it to server
+     let routes: Vec<crate::http::Route> = app.html_routes.iter().chain(app.api_routes.iter()).cloned().collect();
+
+     println!("Routes: {:?}", routes);
  
      // handle requests
      crate::http::start(routes).await

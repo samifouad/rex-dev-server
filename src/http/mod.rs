@@ -1,6 +1,9 @@
 use hyper::{Response, Request, Body, server::conn::AddrStream};
 use std::net::SocketAddr;
 use std::convert::Infallible;
+use tokio::task;
+use std::fs::File;
+use std::io::{self, Read};
 
 use hyper::{service::{service_fn, make_service_fn}, Server};
 
@@ -46,6 +49,13 @@ struct AppContext {
     routes: Vec<Route>
 }
 
+fn read_file_to_bytes(filename: &str) -> io::Result<Vec<u8>> {
+    let mut file = File::open(filename)?;
+    let mut buffer = Vec::new();
+    file.read_to_end(&mut buffer)?;
+    Ok(buffer)
+}
+
 async fn router(
     context: AppContext,
     addr: SocketAddr,
@@ -53,25 +63,51 @@ async fn router(
 ) -> Result<Response<Body>, Infallible> {
     println!("\n\n New Request from: {:?}", addr);
     
-    for route in context.routes {
-        if route.path == req.uri().to_string() {
-            println!("Matching Route Found!");
-            println!("Route: {:?}", route);
-            println!("Will load resource: {:?}", route.file);
-        } else {
-            // do nothing
+    // for route in context.routes {
+    //     if route.path == req.uri().to_string() {
+    //         println!("Matching Route Found!");
+    //         println!("Route: {:?}", route);
+    //         println!("Will load resource: {:?}", route.file);
+    //     } else {
+    //         // do nothing
+    //     }
+    // } 
+
+    // Clone the routes
+    let routes = context.routes.clone();
+
+    // Extract the route's file path before getting into async operations
+    let maybe_file_path = context.routes.iter()
+        .find(|&route| route.path == req.uri().to_string())
+        .map(|route| route.file.clone());
+
+    if let Some(file_path) = maybe_file_path {
+        // ... your code ...
+
+        // Now, you can read the file using the extracted path
+        let file_data = task::spawn_blocking(move || read_file_to_bytes(&file_path))
+            .await
+            .unwrap_or_else(|_| Err(io::Error::new(io::ErrorKind::Other, "404!!")));
+
+        match file_data {
+            Ok(bytes) => {
+                return Ok(Response::new(Body::from(bytes)));
+            }
+            Err(e) => {
+                eprintln!("Error reading for: {}", req.uri().to_string());
+                return Ok(Response::new(Body::from("404!")));
+            }
         }
-    } 
-    
-    println!("Req Method: {:?}", req.method());
-    println!("Req URI: {:?}", req.uri());
-    Ok(Response::new(Body::from("Hello World")))
+    } else {
+        println!("No Matching Route Found");
+        return Ok(Response::new(Body::from("404!")));
+    }
 }
 
-pub async fn start(http_routes: Vec<Route>) {
+pub async fn start(routes: Vec<Route>) {
 
     let app_context = AppContext {
-        routes: http_routes.clone()
+        routes: routes.clone()
     };
 
     // Construct our SocketAddr to listen on...
