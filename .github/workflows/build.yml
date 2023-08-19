@@ -116,7 +116,7 @@ jobs:
             toolchain: stable
             target: aarch64-apple-darwin
             components: rustfmt, clippy
-      - cargo build
+      - name: cargo build
         shell: bash
         run: |
           cd /Users/runner/work/rex-dev-server/rex-dev-server/main && cargo build --release --target aarch64-apple-darwin
