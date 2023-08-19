@@ -537,7 +537,7 @@ dependencies = [
 
 [[package]]
 name = "rexds"
-version = "0.2.10"
+version = "0.2.11"
 dependencies = [
  "hyper",
  "notify",
