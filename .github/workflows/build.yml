@@ -16,6 +16,9 @@ jobs:
           path: main
       - shell: bash
         run: |
+          tree /home/runner/work/rex-dev-server
+      - shell: bash
+        run: |
           cargo build --release --target x86_64-unknown-linux-gnu
       - name: Results
         uses: actions/upload-artifact@v3
