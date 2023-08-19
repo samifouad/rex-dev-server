@@ -20,7 +20,8 @@ jobs:
             toolchain: stable
             target: x86_64-unknown-linux-gnu
             components: rustfmt, clippy
-      - shell: bash
+      - name: cargo build
+        shell: bash
         run: |
           cd /home/runner/work/rex-dev-server/rex-dev-server/main && cargo build --release --target x86_64-unknown-linux-gnu
       - name: Results
@@ -43,7 +44,8 @@ jobs:
             toolchain: stable
             target: aarch64-unknown-linux-gnu
             components: rustfmt, clippy
-      - shell: bash
+      - name: cargo build
+        shell: bash
         run: |
           cd /home/runner/work/rex-dev-server/rex-dev-server/main && cargo build --release --target aarch64-unknown-linux-gnu
       - name: Results
@@ -66,7 +68,8 @@ jobs:
             toolchain: stable
             target: x86_64-pc-windows-msvc
             components: rustfmt, clippy
-      - shell: bash
+      - name: cargo build
+        shell: bash
         run: |
           cd D:\a\rex-dev-server\rex-dev-server\main && cargo build --release --target x86_64-pc-windows-msvc
       - name: Results
@@ -89,7 +92,8 @@ jobs:
             toolchain: stable
             target: aarch64-apple-darwin
             components: rustfmt, clippy
-      - shell: bash
+      - name: cargo build
+        shell: bash
         run: |
           cd /Users/runner/work/rex-dev-server/rex-dev-server/main && cargo build --release --target x86_64-apple-darwin/
       - name: Results
@@ -112,7 +116,8 @@ jobs:
             toolchain: stable
             target: aarch64-apple-darwin
             components: rustfmt, clippy
-      - shell: bash
+      - cargo build
+        shell: bash
         run: |
           cd /Users/runner/work/rex-dev-server/rex-dev-server/main && cargo build --release --target aarch64-apple-darwin
       - name: Results
