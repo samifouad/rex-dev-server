@@ -12,15 +12,12 @@ jobs:
     steps:
       - shell: bash
         run: |
-          pwd > results-1.txt
-      - shell: bash
-        run: |
-          ls > results-1.txt
+          cargo build --release --target x86_64-unknown-linux-gnu --json=artifacts
       - name: Results
         uses: actions/upload-artifact@v3
         with:
           name: Linux-X86_64
-          path: results-1.txt
+          path: target/x86_64-unknown-linux-gnu/release/rexds
   
   job_2:
     name: Linux ARM64
@@ -28,15 +25,12 @@ jobs:
     steps:
       - shell: bash
         run: |
-          pwd > results-2.txt
-      - shell: bash
-        run: |
-          ls > results-2.txt
+          cargo build --release --target aarch64-unknown-linux-gnu --json=artifacts
       - name: Results
         uses: actions/upload-artifact@v3
         with:
           name: Linux-ARM64
-          path: results-2.txt
+          path: target/aarch64-unknown-linux-gnu/release/rexds
 
   job_3:
     name: Windows X86_64
@@ -44,15 +38,12 @@ jobs:
     steps:
       - shell: bash
         run: |
-          pwd > results-3.txt
-      - shell: bash
-        run: |
-          ls > results-3.txt
+          cargo build --release --target x86_64-pc-windows-msvc --json=artifacts
       - name: Results
         uses: actions/upload-artifact@v3
         with:
           name: Windows-X86_64
-          path: results-3.txt
+          path: target/x86_64-pc-windows-msvc/release/rexds.exe
 
   job_4:
     name: macOS X86_64
@@ -60,29 +51,22 @@ jobs:
     steps:
       - shell: bash
         run: |
-          pwd > results-4.txt
-      - shell: bash
-        run: |
-          ls > results-4.txt
+          cargo build --release --target x86_64-apple-darwin --json=artifacts
       - name: Results
         uses: actions/upload-artifact@v3
         with:
           name: macOS-X86_64
-          path: results-4.txt
+          path: target/x86_64-apple-darwin/release/rexds
 
   job_5:
     name: macOS ARM64
-    needs: job_2
     runs-on: macOS-latest
     steps:
       - shell: bash
         run: |
-          pwd > results-5.txt
-      - shell: bash
-        run: |
-          ls > results-5.txt
+          cargo build --release --target aarch64-apple-darwin --json=artifacts
       - name: Results
         uses: actions/upload-artifact@v3
         with:
           name: macOS-ARM64
-          path: results-5.txt
+          path: target/aarch64-apple-darwin/release/rexds
