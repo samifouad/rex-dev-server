@@ -1,9 +1,8 @@
-use notify::{Watcher, RecursiveMode, watcher, DebouncedEvent};
+use notify::{watcher, DebouncedEvent, RecursiveMode, Watcher};
 use std::sync::mpsc::channel;
 use std::time::Duration;
 
-pub fn writes (watch_path: &str, port: &str) -> () {
-
+pub fn writes(watch_path: &str, port: &str) {
     println!("hello from secondary thread");
     println!("port number is: {}", port);
 
@@ -18,13 +17,18 @@ pub fn writes (watch_path: &str, port: &str) -> () {
 
     loop {
         match receiver.recv() {
-        Ok(event) => {
-                match event {
-                    DebouncedEvent::NoticeWrite(path) => println!("write: {:?}", path),
-                    _ => (),
-                }
-        },
-        Err(e) => println!("watch error: {:?}", e),
+            Ok(event) => match event {
+                DebouncedEvent::NoticeWrite(path) => println!("write: {:?}", path),
+                DebouncedEvent::NoticeRemove(_) => todo!(),
+                DebouncedEvent::Create(_) => todo!(),
+                DebouncedEvent::Write(_) => todo!(),
+                DebouncedEvent::Chmod(_) => todo!(),
+                DebouncedEvent::Remove(_) => todo!(),
+                DebouncedEvent::Rename(_, _) => todo!(),
+                DebouncedEvent::Rescan => todo!(),
+                DebouncedEvent::Error(_, _) => todo!(),
+            },
+            Err(e) => println!("watch error: {:?}", e),
         }
     }
 }

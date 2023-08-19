@@ -1,16 +1,27 @@
 use crate::cli::Args;
 
-pub async fn cmd (context: Args) {
-
+pub async fn cmd(context: Args) {
     // defaults
     let mut init_watch = false;
 
     // override defaults if param provided
-    let init_port = context.params.get("--port").cloned().unwrap_or("9001".to_string());
-    let init_mode = context.params.get("--mode").cloned().unwrap_or("dev".to_string());
-    let init_folder = context.params.get("--folder").cloned().unwrap_or("./app".to_string());
+    let init_port = context
+        .params
+        .get("--port")
+        .cloned()
+        .unwrap_or("9001".to_string());
+    let init_mode = context
+        .params
+        .get("--mode")
+        .cloned()
+        .unwrap_or("dev".to_string());
+    let init_folder = context
+        .params
+        .get("--folder")
+        .cloned()
+        .unwrap_or("./app".to_string());
 
-    if let Some (folder) = context.flags.get("--watch") {
+    if let Some(folder) = context.flags.get("--watch") {
         init_watch = true;
     }
 
@@ -31,13 +42,15 @@ pub async fn cmd (context: Args) {
     println!("API routes: {:?}", app_data.api_files);
 
     // static files
-    let converted_paths: Vec<Option<(String, String)>> = app_data.pages_files
+    let converted_paths: Vec<Option<(String, String)>> = app_data
+        .pages_files
         .iter()
         .map(|path| convert_path(path.as_str()))
         .collect();
 
     // js api endpoints
-    let converted_js_paths: Vec<Option<(String, String)>> = app_data.api_files
+    let converted_js_paths: Vec<Option<(String, String)>> = app_data
+        .api_files
         .iter()
         .map(|jspath| convert_js_path(jspath.as_str()))
         .collect();
@@ -52,26 +65,29 @@ pub async fn cmd (context: Args) {
     app.html("/404", "./app/404.html");
 
     // attach static files to http server
-    for option in converted_paths {
-        if let Some((input, output)) = option {
-            app.html(output.as_str(), format!("./app/pages/{}", input).as_str());
-        }
+    for option in converted_paths.into_iter().flatten() {
+        let (input, output) = option;
+        app.html(output.as_str(), format!("./app/pages/{}", input).as_str());
     }
 
     // attach js api endpoints to http server
-    for option in converted_js_paths {
-        if let Some((input, output)) = option {
-            app.api(output.as_str(), format!("./app/api/{}", input).as_str());
-        }
+    for option in converted_js_paths.into_iter().flatten() {
+        let (input, output) = option;
+        app.api(output.as_str(), format!("./app/api/{}", input).as_str());
     }
- 
-    // combine routes into a single vector, supply it to server
-     let routes: Vec<crate::http::Route> = app.html_routes.iter().chain(app.api_routes.iter()).cloned().collect();
 
-     println!("Routes: {:?}", routes);
- 
-     // handle requests
-     crate::http::start(routes).await
+    // combine routes into a single vector, supply it to server
+    let routes: Vec<crate::http::Route> = app
+        .html_routes
+        .iter()
+        .chain(app.api_routes.iter())
+        .cloned()
+        .collect();
+
+    println!("Routes: {:?}", routes);
+
+    // handle requests
+    crate::http::start(routes).await
 }
 
 fn convert_path(input_path: &str) -> Option<(String, String)> {
@@ -105,22 +121,23 @@ fn convert_path(input_path: &str) -> Option<(String, String)> {
             "".to_string()
         } else {
             // Return path excluding the "index" segment
-            let constructed_route = segments[..segments.len()-1].join("/");
-            if constructed_route.starts_with("/") {
+            let constructed_route = segments[..segments.len() - 1].join("/");
+            if constructed_route.starts_with('/') {
                 constructed_route
             } else {
                 format!("/{}", constructed_route)
             }
         }
     } else {
-        let constructed_route = segments[..segments.len()-1].join("/") + "/" + file_name_without_extension;
-        if constructed_route.starts_with("/") {
+        let constructed_route =
+            segments[..segments.len() - 1].join("/") + "/" + file_name_without_extension;
+        if constructed_route.starts_with('/') {
             constructed_route
         } else {
             format!("/{}", constructed_route)
         }
     };
-    
+
     Some((input_path.to_string(), route))
 }
 
@@ -142,7 +159,8 @@ fn convert_js_path(input_path: &str) -> Option<(String, String)> {
     }
     let file_name_without_extension = &last_segment[..last_segment.len() - 3];
 
-    let mut constructed_route = segments[..segments.len()-1].join("/") + "/" + file_name_without_extension;
+    let mut constructed_route =
+        segments[..segments.len() - 1].join("/") + "/" + file_name_without_extension;
 
     // Handle starting double slashes
     if constructed_route.starts_with("//") {

@@ -25,12 +25,13 @@ pub fn app_folder(app_folder_path: &str) -> std::io::Result<AppData> {
 
             if path.starts_with(Path::new(app_folder_path).join("pages")) {
                 if let Ok(relative_path) = path.strip_prefix(app_folder_path) {
-                    app_data.pages_files.push(relative_path.to_string_lossy().to_string());
+                    app_data
+                        .pages_files
+                        .push(relative_path.to_string_lossy().to_string());
                 }
             } else {
                 app_data.app_root_files.push(file_name);
             }
-
         } else if path.is_dir() {
             let dir_name = path.file_name().unwrap().to_string_lossy();
 
@@ -52,19 +53,21 @@ pub fn app_folder(app_folder_path: &str) -> std::io::Result<AppData> {
     Ok(app_data)
 }
 
-fn collect_files(folder_path: &Path, app_data: &mut AppData, category: &str) -> std::io::Result<()> {
+fn collect_files(
+    folder_path: &Path,
+    app_data: &mut AppData,
+    category: &str,
+) -> std::io::Result<()> {
     if let Ok(entries) = fs::read_dir(folder_path) {
         let files = match category {
             "api" => &mut app_data.api_files,
             _ => return Ok(()),
         };
 
-        for entry in entries {
-            if let Ok(entry) = entry {
-                if entry.path().is_file() {
-                    if let Some(file_name) = entry.path().file_name() {
-                        files.push(file_name.to_string_lossy().to_string());
-                    }
+        for entry in entries.flatten() {
+            if entry.path().is_file() {
+                if let Some(file_name) = entry.path().file_name() {
+                    files.push(file_name.to_string_lossy().to_string());
                 }
             }
         }
@@ -72,7 +75,11 @@ fn collect_files(folder_path: &Path, app_data: &mut AppData, category: &str) -> 
     Ok(())
 }
 
-fn traverse_recursive(path: &Path, files: &mut Vec<String>, root_path: &Path) -> std::io::Result<()> {
+fn traverse_recursive(
+    path: &Path,
+    files: &mut Vec<String>,
+    root_path: &Path,
+) -> std::io::Result<()> {
     if path.is_dir() {
         for entry in fs::read_dir(path)? {
             let entry = entry?;

@@ -3,12 +3,12 @@
 #![allow(unused_imports)]
 #![allow(unused_assignments)]
 
-pub mod start;
-pub mod init;
-pub mod tree;
-pub mod route;
 pub mod build;
 pub mod deploy;
+pub mod init;
+pub mod route;
+pub mod start;
+pub mod tree;
 
 #[derive(Debug, Clone)]
 pub struct Args {
@@ -17,33 +17,29 @@ pub struct Args {
     pub commands: Vec<String>,
 }
 
-pub fn collect (args: Vec<String>) -> Args {
-
+pub fn collect(args: Vec<String>) -> Args {
     let mut flags = std::collections::HashMap::new();
     let mut params = std::collections::HashMap::new();
     let mut commands = Vec::new();
 
     let valid_flags = [
-                                    "--help", "help", "-H", 
-                                    "--version", "version", "-V", 
-                                    "--update", "update", "-U", 
-                                    "--watch", "watch", "-W"
-                                ];
+        "--help",
+        "help",
+        "-H",
+        "--version",
+        "version",
+        "-V",
+        "--update",
+        "update",
+        "-U",
+        "--watch",
+        "watch",
+        "-W",
+    ];
 
-    let valid_params = [
-                                    "--port",
-                                    "--mode",
-                                    "--folder"
-                                ];
+    let valid_params = ["--port", "--mode", "--folder"];
 
-    let valid_commands = [
-                                    "start",
-                                    "tree",
-                                    "route",
-                                    "init",
-                                    "build",
-                                    "deploy"
-                                ];
+    let valid_commands = ["start", "tree", "route", "init", "build", "deploy"];
 
     let mut iter = args.iter().enumerate();
     while let Some((_i, arg)) = iter.next() {
@@ -58,7 +54,7 @@ pub fn collect (args: Vec<String>) -> Args {
         } else if valid_commands.contains(&arg.as_str()) {
             commands.push(arg.clone());
         }
-    };
+    }
 
     Args {
         flags,
@@ -68,7 +64,7 @@ pub fn collect (args: Vec<String>) -> Args {
 }
 
 // provide helpful info if no args are provided
-pub fn help () {
+pub fn help() {
     println!("rexds [version {}]\n", env!("CARGO_PKG_VERSION"));
     println!("usage: rexds [--version] [--help] [--update] <command> [<params>]\n");
     println!("rexds expects an ./app folder containing an index.html entrypoint.\n\nyou can override this location with the parameter: --folder <path>\n");
@@ -82,14 +78,20 @@ pub fn help () {
     println!("\n");
 }
 
-pub fn version () {
-    println!("rexds [version {}]\n\nto check for updates run: rexds --update\n", env!("CARGO_PKG_VERSION"));
+pub fn version() {
+    println!(
+        "rexds [version {}]\n\nto check for updates run: rexds --update\n",
+        env!("CARGO_PKG_VERSION")
+    );
 }
 
-pub fn update () {
+pub fn update() {
     println!("this will check for updates and offer the ability to run the update. not yet implemented. \n");
 }
 
-pub fn error (msg: Option<&String>) {
-    println!("{}", msg.unwrap_or(&"\ninstructions unclear. try '--help' for guidance\n".to_string()));
+pub fn error(msg: Option<&String>) {
+    println!(
+        "{}",
+        msg.unwrap_or(&"\ninstructions unclear. try '--help' for guidance\n".to_string())
+    );
 }
