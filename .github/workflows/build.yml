@@ -10,7 +10,10 @@ jobs:
     name: Linux X86_64
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          path: main
       - shell: bash
         run: |
           cargo build --release --target x86_64-unknown-linux-gnu
@@ -24,7 +27,10 @@ jobs:
     name: Linux ARM64
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          path: main
       - shell: bash
         run: |
           cargo build --release --target aarch64-unknown-linux-gnu
@@ -38,7 +44,10 @@ jobs:
     name: Windows X86_64
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          path: main
       - shell: bash
         run: |
           cargo build --release --target x86_64-pc-windows-msvc
@@ -52,7 +61,10 @@ jobs:
     name: macOS X86_64
     runs-on: macOS-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          path: main
       - shell: bash
         run: |
           cargo build --release --target x86_64-apple-darwin 
@@ -67,7 +79,10 @@ jobs:
     name: macOS ARM64
     runs-on: macOS-latest 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          path: main
       - shell: bash
         run: |
           cargo build --release --target aarch64-apple-darwin
