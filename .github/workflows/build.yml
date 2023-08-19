@@ -1,51 +1,88 @@
-name: Share data between jobs
+name: Build & Release - All supported platforms
 
-on: [push]
+on:
+  push:
+    tags:
+      - '*'
 
 jobs:
   job_1:
-    name: Add 3 and 7
+    name: Linux X86_64
     runs-on: ubuntu-latest
     steps:
       - shell: bash
         run: |
-          expr 3 + 7 > math-homework.txt
-      - name: Upload math result for job 1
-        uses: actions/upload-artifact@v3
-        with:
-          name: homework
-          path: math-homework.txt
-
-  job_2:
-    name: Multiply by 9
-    needs: job_1
-    runs-on: windows-latest
-    steps:
-      - name: Download math result for job 1
-        uses: actions/download-artifact@v3
-        with:
-          name: homework
+          pwd > results-1.txt
       - shell: bash
         run: |
-          value=`cat math-homework.txt`
-          expr $value \* 9 > math-homework.txt
-      - name: Upload math result for job 2
+          ls > results-1.txt
+      - name: Results
         uses: actions/upload-artifact@v3
         with:
-          name: homework
-          path: math-homework.txt
+          name: Linux-X86_64
+          path: results-1.txt
+  
+  job_2:
+    name: Linux ARM64
+    runs-on: ubuntu-latest
+    steps:
+      - shell: bash
+        run: |
+          pwd > results-2.txt
+      - shell: bash
+        run: |
+          ls > results-2.txt
+      - name: Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: Linux-ARM64
+          path: results-2.txt
 
   job_3:
-    name: Display results
+    name: Windows X86_64
+    runs-on: windows-latest
+    steps:
+      - shell: bash
+        run: |
+          pwd > results-3.txt
+      - shell: bash
+        run: |
+          ls > results-3.txt
+      - name: Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: Windows-X86_64
+          path: results-3.txt
+
+  job_4:
+    name: macOS X86_64
+    runs-on: macOS-latest
+    steps:
+      - shell: bash
+        run: |
+          pwd > results-4.txt
+      - shell: bash
+        run: |
+          ls > results-4.txt
+      - name: Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: macOS-X86_64
+          path: results-4.txt
+
+  job_5:
+    name: macOS ARM64
     needs: job_2
     runs-on: macOS-latest
     steps:
-      - name: Download math result for job 2
-        uses: actions/download-artifact@v3
-        with:
-          name: homework
-      - name: Print the final result
-        shell: bash
+      - shell: bash
         run: |
-          value=`cat math-homework.txt`
-          echo The result is $value
+          pwd > results-5.txt
+      - shell: bash
+        run: |
+          ls > results-5.txt
+      - name: Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: macOS-ARM64
+          path: results-5.txt
