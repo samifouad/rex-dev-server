@@ -68,12 +68,12 @@ jobs:
             components: rustfmt, clippy
       - shell: bash
         run: |
-          cd /home/runner/work/rex-dev-server/rex-dev-server/main && cargo build --release --target x86_64-pc-windows-msvc
+          cd D:\a\rex-dev-server\rex-dev-server\main && cargo build --release --target x86_64-pc-windows-msvc
       - name: Results
         uses: actions/upload-artifact@v3
         with:
           name: Windows-X86_64
-          path: /home/runner/work/rex-dev-server/rex-dev-server/main/target/x86_64-pc-windows-msvc/release/rexds.exe
+          path: D:\a\rex-dev-server\rex-dev-server\main\target\x86_64-pc-windows-msvc\release\rexds.exe
 
   job_4:
     name: macOS X86_64
@@ -91,12 +91,12 @@ jobs:
             components: rustfmt, clippy
       - shell: bash
         run: |
-          cd /home/runner/work/rex-dev-server/rex-dev-server/main && cargo build --release --target x86_64-apple-darwin/
+          cd /Users/runner/work/rex-dev-server/rex-dev-server/main && cargo build --release --target x86_64-apple-darwin/
       - name: Results
         uses: actions/upload-artifact@v3
         with:
           name: macOS-X86_64
-          path: /home/runner/work/rex-dev-server/rex-dev-server/main/target/x86_64-apple-darwin/release/rexds
+          path: /Users/runner/work/rex-dev-server/rex-dev-server/main/target/x86_64-apple-darwin/release/rexds
 
   job_5:
     name: macOS ARM64
@@ -114,9 +114,9 @@ jobs:
             components: rustfmt, clippy
       - shell: bash
         run: |
-          cd /home/runner/work/rex-dev-server/rex-dev-server/main && cargo build --release --target aarch64-apple-darwin
+          cd /Users/runner/work/rex-dev-server/rex-dev-server/main && cargo build --release --target aarch64-apple-darwin
       - name: Results
         uses: actions/upload-artifact@v3
         with:
           name: macOS-ARM64
-          path: /home/runner/work/rex-dev-server/rex-dev-server/main/target/aarch64-apple-darwin/release/rexds
+          path: /Users/runner/work/rex-dev-server/rex-dev-server/main/target/aarch64-apple-darwin/release/rexds
