@@ -44,6 +44,9 @@ jobs:
             toolchain: stable
             target: aarch64-unknown-linux-gnu
             components: rustfmt, clippy
+      - name: aarch64-linux linker install
+        shell: bash
+        run: sudo apt-get install gcc-aarch64-linux-gnu
       - name: cargo build
         shell: bash
         run: |
@@ -71,12 +74,12 @@ jobs:
       - name: cargo build
         shell: bash
         run: |
-          cd D:\a\rex-dev-server\rex-dev-server\main && cargo build --release --target x86_64-pc-windows-msvc
+          cd D:/a/rex-dev-server/rex-dev-server/main && cargo build --release --target x86_64-pc-windows-msvc
       - name: Results
         uses: actions/upload-artifact@v3
         with:
           name: Windows-X86_64
-          path: D:\a\rex-dev-server\rex-dev-server\main\target\x86_64-pc-windows-msvc\release\rexds.exe
+          path: D:/a/rex-dev-server/rex-dev-server/main/target/x86_64-pc-windows-msvc/release/rexds.exe
 
   job_4:
     name: macOS X86_64
@@ -95,7 +98,7 @@ jobs:
       - name: cargo build
         shell: bash
         run: |
-          cd /Users/runner/work/rex-dev-server/rex-dev-server/main && cargo build --release --target x86_64-apple-darwin/
+          cd /Users/runner/work/rex-dev-server/rex-dev-server/main && cargo build --release --target x86_64-apple-darwin
       - name: Results
         uses: actions/upload-artifact@v3
         with:
