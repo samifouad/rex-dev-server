@@ -176,13 +176,12 @@ jobs:
     - name: Configure rclone
       shell: bash
       run: |
-        echo '[releases]
-        type = s3
-        provider = Cloudflare
-        access_key_id = '${{ secrets.CF_KEY_ID }}'
-        secret_access_key = '${{ secrets.CF_ACCESS_KEY }}'
-        endpoint = https://08b93c93f8b7adc43678e9afba31e4ee.r2.cloudflarestorage.com
-        acl = private' > $rconfig
+        rclone config create releases s3 \
+        provider Cloudflare \
+        access_key_id "${{ secrets.CF_KEY_ID }}" \
+        secret_access_key "${{ secrets.CF_ACCESS_KEY }}" \
+        endpoint "https://08b93c93f8b7adc43678e9afba31e4ee.r2.cloudflarestorage.com" \
+        acl private
 
     - name: Display r2 remote bucket files
       run: rclone tree releases
