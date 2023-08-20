@@ -59,119 +59,121 @@ jobs:
   #         name: Linux-ARM64-musl
   #         path: /home/runner/work/rex-dev-server/rex-dev-server/main/target/aarch64-unknown-linux-musl/release/rexds
 
-  job_3:
-    name: rexds_x86-64-unknown-linux-musl
-    runs-on: ubuntu-latest
-    env:
-      RUSTFLAGS: -C linker=musl-gcc
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          path: main
-      - name: Install Rust Toolchain
-        uses: dtolnay/rust-toolchain@stable
-        with:
-            toolchain: stable
-            target: x86_64-unknown-linux-musl
-            components: rustfmt, clippy
-      - name: musl tools
-        shell: bash
-        run: sudo apt-get update && sudo apt-get install musl-tools
-      - name: cargo build
-        shell: bash
-        run: |
-          cd /home/runner/work/rex-dev-server/rex-dev-server/main && cargo build --release --target x86_64-unknown-linux-musl
-      - name: Results
-        uses: actions/upload-artifact@v3
-        with:
-          name: rexds_${{ github.ref_name }}_x86-64-unknown-linux-musl
-          path: /home/runner/work/rex-dev-server/rex-dev-server/main/target/x86_64-unknown-linux-musl/release/rexds
+  # job_3:
+  #   name: rexds_x86-64-unknown-linux-musl
+  #   runs-on: ubuntu-latest
+  #   env:
+  #     RUSTFLAGS: -C linker=musl-gcc
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v3
+  #       with:
+  #         path: main
+  #     - name: Install Rust Toolchain
+  #       uses: dtolnay/rust-toolchain@stable
+  #       with:
+  #           toolchain: stable
+  #           target: x86_64-unknown-linux-musl
+  #           components: rustfmt, clippy
+  #     - name: musl tools
+  #       shell: bash
+  #       run: sudo apt-get update && sudo apt-get install musl-tools
+  #     - name: cargo build
+  #       shell: bash
+  #       run: |
+  #         cd /home/runner/work/rex-dev-server/rex-dev-server/main && cargo build --release --target x86_64-unknown-linux-musl
+  #     - name: Results
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: rexds_${{ github.ref_name }}_x86-64-unknown-linux-musl
+  #         path: /home/runner/work/rex-dev-server/rex-dev-server/main/target/x86_64-unknown-linux-musl/release/rexds
 
-  job_4:
-    name: rexds_x86-64-pc-windows-msvc
-    runs-on: windows-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          path: main
-      - name: Install Rust Toolchain
-        uses: dtolnay/rust-toolchain@stable
-        with:
-            toolchain: stable
-            target: x86_64-pc-windows-msvc
-            components: rustfmt, clippy
-      - name: cargo build
-        shell: bash
-        run: |
-          cd D:/a/rex-dev-server/rex-dev-server/main && cargo build --release --target x86_64-pc-windows-msvc
-      - name: Results
-        uses: actions/upload-artifact@v3
-        with:
-          name: rexds_${{ github.ref_name }}_x86-64-pc-windows-msvc
-          path: D:/a/rex-dev-server/rex-dev-server/main/target/x86_64-pc-windows-msvc/release/rexds.exe
+  # job_4:
+  #   name: rexds_x86-64-pc-windows-msvc
+  #   runs-on: windows-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v3
+  #       with:
+  #         path: main
+  #     - name: Install Rust Toolchain
+  #       uses: dtolnay/rust-toolchain@stable
+  #       with:
+  #           toolchain: stable
+  #           target: x86_64-pc-windows-msvc
+  #           components: rustfmt, clippy
+  #     - name: cargo build
+  #       shell: bash
+  #       run: |
+  #         cd D:/a/rex-dev-server/rex-dev-server/main && cargo build --release --target x86_64-pc-windows-msvc
+  #     - name: Results
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: rexds_${{ github.ref_name }}_x86-64-pc-windows-msvc
+  #         path: D:/a/rex-dev-server/rex-dev-server/main/target/x86_64-pc-windows-msvc/release/rexds.exe
 
-  job_5:
-    name: rexds_x86-64-apple-darwin
-    runs-on: macOS-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          path: main
-      - name: Install Rust Toolchain
-        uses: dtolnay/rust-toolchain@stable
-        with:
-            toolchain: stable
-            target: aarch64-apple-darwin
-            components: rustfmt, clippy
-      - name: cargo build
-        shell: bash
-        run: |
-          cd /Users/runner/work/rex-dev-server/rex-dev-server/main && cargo build --release --target x86_64-apple-darwin
-      - name: Results
-        uses: actions/upload-artifact@v3
-        with:
-          name: rexds_${{ github.ref_name }}_x86-64-apple-darwin
-          path: /Users/runner/work/rex-dev-server/rex-dev-server/main/target/x86_64-apple-darwin/release/rexds
+  # job_5:
+  #   name: rexds_x86-64-apple-darwin
+  #   runs-on: macOS-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v3
+  #       with:
+  #         path: main
+  #     - name: Install Rust Toolchain
+  #       uses: dtolnay/rust-toolchain@stable
+  #       with:
+  #           toolchain: stable
+  #           target: aarch64-apple-darwin
+  #           components: rustfmt, clippy
+  #     - name: cargo build
+  #       shell: bash
+  #       run: |
+  #         cd /Users/runner/work/rex-dev-server/rex-dev-server/main && cargo build --release --target x86_64-apple-darwin
+  #     - name: Results
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: rexds_${{ github.ref_name }}_x86-64-apple-darwin
+  #         path: /Users/runner/work/rex-dev-server/rex-dev-server/main/target/x86_64-apple-darwin/release/rexds
 
-  job_6:
-    name: rexds_aarch64-apple-darwin
-    runs-on: macOS-latest 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          path: main
-      - name: Install Rust Toolchain
-        uses: dtolnay/rust-toolchain@stable
-        with:
-            toolchain: stable
-            target: aarch64-apple-darwin
-            components: rustfmt, clippy
-      - name: cargo build
-        shell: bash
-        run: |
-          cd /Users/runner/work/rex-dev-server/rex-dev-server/main && cargo build --release --target aarch64-apple-darwin
-      - name: Results
-        uses: actions/upload-artifact@v3
-        with:
-          name: rexds_${{ github.ref_name }}_aarch64-apple-darwin
-          path: /Users/runner/work/rex-dev-server/rex-dev-server/main/target/aarch64-apple-darwin/release/rexds
+  # job_6:
+  #   name: rexds_aarch64-apple-darwin
+  #   runs-on: macOS-latest 
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v3
+  #       with:
+  #         path: main
+  #     - name: Install Rust Toolchain
+  #       uses: dtolnay/rust-toolchain@stable
+  #       with:
+  #           toolchain: stable
+  #           target: aarch64-apple-darwin
+  #           components: rustfmt, clippy
+  #     - name: cargo build
+  #       shell: bash
+  #       run: |
+  #         cd /Users/runner/work/rex-dev-server/rex-dev-server/main && cargo build --release --target aarch64-apple-darwin
+  #     - name: Results
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: rexds_${{ github.ref_name }}_aarch64-apple-darwin
+  #         path: /Users/runner/work/rex-dev-server/rex-dev-server/main/target/aarch64-apple-darwin/release/rexds
 
   upload-to-cloudflare:
-    needs: [job_1, job_3, job_4, job_5, job_6]
+    needs: [job_1]
+    # needs: [job_1, job_3, job_4, job_5, job_6]
     runs-on: ubuntu-latest
 
     steps:
-    - name: Install rclone
+    - name: Install updates + curl
       shell: bash
       run: |
-        sudo apt-get update && sudo apt-get install -y rclone
+        sudo apt-get update && sudo apt-get install -y curl
 
-    - name: rclone config file location
-      run: rconfig=$(rclone config file)
+    - name: rclone install
+      shell: bash
+      run: sudo -v ; curl https://rclone.org/install.sh | sudo bash
 
     - name: Configure rclone
       shell: bash
@@ -184,7 +186,7 @@ jobs:
         acl private
 
     - name: Display r2 remote bucket files
-      run: rclone tree releases
+      run: rclone listremotes
 
     - name: Download all artifacts
       uses: actions/download-artifact@v2
