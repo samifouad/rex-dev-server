@@ -7,7 +7,7 @@ on:
 
 jobs:
   job_1:
-    name: Linux + gnu ( x86_64-unknown-linux-gnu )
+    name: rexds_x86-64-unknown-linux-gnu
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -60,7 +60,7 @@ jobs:
   #         path: /home/runner/work/rex-dev-server/rex-dev-server/main/target/aarch64-unknown-linux-musl/release/rexds
 
   job_3:
-    name: Linux + musl ( x86_64-unknown-linux-musl )
+    name: rexds_x86-64-unknown-linux-musl
     runs-on: ubuntu-latest
     env:
       RUSTFLAGS: -C linker=musl-gcc
@@ -89,7 +89,7 @@ jobs:
           path: /home/runner/work/rex-dev-server/rex-dev-server/main/target/x86_64-unknown-linux-musl/release/rexds
 
   job_4:
-    name: Windows ( x86_64-pc-windows-msvc )
+    name: rexds_x86-64-pc-windows-msvc
     runs-on: windows-latest
     steps:
       - name: Checkout
@@ -113,7 +113,7 @@ jobs:
           path: D:/a/rex-dev-server/rex-dev-server/main/target/x86_64-pc-windows-msvc/release/rexds.exe
 
   job_5:
-    name: macOS ( x86_64-apple-darwin )
+    name: rexds_x86-64-apple-darwin
     runs-on: macOS-latest
     steps:
       - name: Checkout
@@ -137,7 +137,7 @@ jobs:
           path: /Users/runner/work/rex-dev-server/rex-dev-server/main/target/x86_64-apple-darwin/release/rexds
 
   job_6:
-    name: macOS ( aarch64-apple-darwin )
+    name: rexds_aarch64-apple-darwin
     runs-on: macOS-latest 
     steps:
       - name: Checkout
@@ -159,3 +159,14 @@ jobs:
         with:
           name: rexds_${{ github.ref_name }}_aarch64-apple-darwin
           path: /Users/runner/work/rex-dev-server/rex-dev-server/main/target/aarch64-apple-darwin/release/rexds
+
+  upload-to-cloudflare:
+    needs: [job_1, job_3, job_4, job_5, job_6]
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Download all artifacts
+      uses: actions/download-artifact@v2
+
+    - name: Display structure of downloaded files
+      run: ls -R
