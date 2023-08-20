@@ -7,7 +7,7 @@ on:
 
 jobs:
   job_1:
-    name: Linux X86_64
+    name: Linux X86_64 GNU
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -27,7 +27,7 @@ jobs:
       - name: Results
         uses: actions/upload-artifact@v3
         with:
-          name: Linux-X86_64
+          name: Linux-X86_64-GNU
           path: /home/runner/work/rex-dev-server/rex-dev-server/main/target/x86_64-unknown-linux-gnu/release/rexds
   
   job_2:
@@ -44,6 +44,9 @@ jobs:
             toolchain: stable
             target: aarch64-unknown-linux-musl
             components: rustfmt, clippy
+      - name: musl tools
+        shell: bash
+        run: sudo apt-get update && sudo apt-get install gcc-aarch64-linux-musl
       - name: cargo build
         shell: bash
         run: |
@@ -51,10 +54,37 @@ jobs:
       - name: Results
         uses: actions/upload-artifact@v3
         with:
-          name: Linux-ARM64
+          name: Linux-ARM64-musl
           path: /home/runner/work/rex-dev-server/rex-dev-server/main/target/aarch64-unknown-linux-musl/release/rexds
 
   job_3:
+    name: Linux X64_64 musl
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          path: main
+      - name: Install Rust Toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+            toolchain: stable
+            target: x86_64-unknown-linux-musl
+            components: rustfmt, clippy
+      - name: musl tools
+        shell: bash
+        run: sudo apt-get update && sudo apt-get install gcc-aarch64-linux-musl
+      - name: cargo build
+        shell: bash
+        run: |
+          cd /home/runner/work/rex-dev-server/rex-dev-server/main && cargo build --release --target x86_64-unknown-linux-musl
+      - name: Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: Linux-X64_64-musl
+          path: /home/runner/work/rex-dev-server/rex-dev-server/main/target/x86_64-unknown-linux-musl/release/rexds
+
+  job_4:
     name: Windows X86_64
     runs-on: windows-latest
     steps:
@@ -78,7 +108,7 @@ jobs:
           name: Windows-X86_64
           path: D:/a/rex-dev-server/rex-dev-server/main/target/x86_64-pc-windows-msvc/release/rexds.exe
 
-  job_4:
+  job_5:
     name: macOS X86_64
     runs-on: macOS-latest
     steps:
@@ -102,7 +132,7 @@ jobs:
           name: macOS-X86_64
           path: /Users/runner/work/rex-dev-server/rex-dev-server/main/target/x86_64-apple-darwin/release/rexds
 
-  job_5:
+  job_6:
     name: macOS ARM64
     runs-on: macOS-latest 
     steps:
