@@ -30,7 +30,7 @@ jobs:
           name: Linux + gnu ( x86_64-unknown-linux-gnu )
           path: /home/runner/work/rex-dev-server/rex-dev-server/main/target/x86_64-unknown-linux-gnu/release/rexds
   
-  # job_2:
+  # job_2: 
   #   name: Linux ARM64 musl
   #   runs-on: ubuntu-latest
   #   env:
