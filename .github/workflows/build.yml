@@ -186,7 +186,7 @@ jobs:
         acl private
 
     - name: Display r2 remote bucket files
-      run: rclone listremotes
+      run: rclone tree releases:rex-releases
 
     - name: Download all artifacts
       uses: actions/download-artifact@v2
