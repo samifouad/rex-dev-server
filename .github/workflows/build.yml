@@ -165,8 +165,28 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Install rclone
+      shell: bash
+      run: |
+        sudo apt-get update && sudo apt-get install -y rclone
+    - name: Configure rclone
+      shell: bash
+      run: |
+        echo '[releases]
+        type = s3
+        provider = Cloudflare
+        access_key_id = '${{ secrets.CF_KEY_ID }}'
+        secret_access_key = '${{ secrets.CF_ACCESS_KEY }}'
+        endpoint = https://08b93c93f8b7adc43678e9afba31e4ee.r2.cloudflarestorage.com
+        acl = private' > ~/.config/rclone/rclone.conf
+
+    - name: Display r2 remote bucket files
+      run: rclone tree releases
+
     - name: Download all artifacts
       uses: actions/download-artifact@v2
 
-    - name: Display structure of downloaded files
-      run: ls -R
+    # - name: Display structure of downloaded files
+    #   run: ls -R
+
+    
