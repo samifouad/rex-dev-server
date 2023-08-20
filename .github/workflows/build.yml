@@ -15,7 +15,7 @@ jobs:
         with:
           path: main
       - name: Install Rust Toolchain
-        uses: actions-rs/toolchain@v1
+        uses: dtolnay/rust-toolchain@stable
         with:
             toolchain: stable
             target: x86_64-unknown-linux-gnu
@@ -70,7 +70,7 @@ jobs:
         with:
           path: main
       - name: Install Rust Toolchain
-        uses: actions-rs/toolchain@v1
+        uses: dtolnay/rust-toolchain@stable
         with:
             toolchain: stable
             target: x86_64-unknown-linux-musl
@@ -97,7 +97,7 @@ jobs:
         with:
           path: main
       - name: Install Rust Toolchain
-        uses: actions-rs/toolchain@v1
+        uses: dtolnay/rust-toolchain@stable
         with:
             toolchain: stable
             target: x86_64-pc-windows-msvc
@@ -121,7 +121,7 @@ jobs:
         with:
           path: main
       - name: Install Rust Toolchain
-        uses: actions-rs/toolchain@v1
+        uses: dtolnay/rust-toolchain@stable
         with:
             toolchain: stable
             target: aarch64-apple-darwin
@@ -145,7 +145,7 @@ jobs:
         with:
           path: main
       - name: Install Rust Toolchain
-        uses: actions-rs/toolchain@v1
+        uses: dtolnay/rust-toolchain@stable
         with:
             toolchain: stable
             target: aarch64-apple-darwin
