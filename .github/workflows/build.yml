@@ -31,7 +31,7 @@ jobs:
           path: /home/runner/work/rex-dev-server/rex-dev-server/main/target/x86_64-unknown-linux-gnu/release/rexds
   
   job_2:
-    name: Linux ARM64
+    name: Linux ARM64 musl
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -42,20 +42,17 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
             toolchain: stable
-            target: aarch64-unknown-linux-gnu
+            target: aarch64-unknown-linux-musl
             components: rustfmt, clippy
-      - name: aarch64-linux linker install
-        shell: bash
-        run: sudo apt-get install gcc-aarch64-linux-gnu
       - name: cargo build
         shell: bash
         run: |
-          cd /home/runner/work/rex-dev-server/rex-dev-server/main && cargo build --release --target aarch64-unknown-linux-gnu
+          cd /home/runner/work/rex-dev-server/rex-dev-server/main && cargo build --release --target aarch64-unknown-linux-musl
       - name: Results
         uses: actions/upload-artifact@v3
         with:
           name: Linux-ARM64
-          path: /home/runner/work/rex-dev-server/rex-dev-server/main/target/aarch64-unknown-linux-gnu/release/rexds
+          path: /home/runner/work/rex-dev-server/rex-dev-server/main/target/aarch64-unknown-linux-musl/release/rexds
 
   job_3:
     name: Windows X86_64
