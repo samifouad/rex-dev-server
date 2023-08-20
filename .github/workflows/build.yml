@@ -27,7 +27,7 @@ jobs:
       - name: Results
         uses: actions/upload-artifact@v3
         with:
-          name: Linux + gnu ( x86_64-unknown-linux-gnu )
+          name: rexds_${{ github.ref_name }}_x86-64-unknown-linux-gnu
           path: /home/runner/work/rex-dev-server/rex-dev-server/main/target/x86_64-unknown-linux-gnu/release/rexds
   
   # job_2: 
@@ -85,7 +85,7 @@ jobs:
       - name: Results
         uses: actions/upload-artifact@v3
         with:
-          name: Linux + musl ( x86_64-unknown-linux-musl )
+          name: rexds_${{ github.ref_name }}_x86-64-unknown-linux-musl
           path: /home/runner/work/rex-dev-server/rex-dev-server/main/target/x86_64-unknown-linux-musl/release/rexds
 
   job_4:
@@ -109,7 +109,7 @@ jobs:
       - name: Results
         uses: actions/upload-artifact@v3
         with:
-          name: Windows ( x86_64-pc-windows-msvc )
+          name: rexds_${{ github.ref_name }}_x86-64-pc-windows-msvc
           path: D:/a/rex-dev-server/rex-dev-server/main/target/x86_64-pc-windows-msvc/release/rexds.exe
 
   job_5:
@@ -133,7 +133,7 @@ jobs:
       - name: Results
         uses: actions/upload-artifact@v3
         with:
-          name: macOS ( x86_64-apple-darwin )
+          name: rexds_${{ github.ref_name }}_x86-64-apple-darwin
           path: /Users/runner/work/rex-dev-server/rex-dev-server/main/target/x86_64-apple-darwin/release/rexds
 
   job_6:
@@ -157,5 +157,5 @@ jobs:
       - name: Results
         uses: actions/upload-artifact@v3
         with:
-          name: macOS ( aarch64-apple-darwin )
+          name: rexds_${{ github.ref_name }}_aarch64-apple-darwin
           path: /Users/runner/work/rex-dev-server/rex-dev-server/main/target/aarch64-apple-darwin/release/rexds
