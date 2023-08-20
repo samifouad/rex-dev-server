@@ -169,6 +169,10 @@ jobs:
       shell: bash
       run: |
         sudo apt-get update && sudo apt-get install -y rclone
+
+    - name: rclone config file location
+      run: rconfig=$(rclone config file)
+
     - name: Configure rclone
       shell: bash
       run: |
@@ -178,7 +182,7 @@ jobs:
         access_key_id = '${{ secrets.CF_KEY_ID }}'
         secret_access_key = '${{ secrets.CF_ACCESS_KEY }}'
         endpoint = https://08b93c93f8b7adc43678e9afba31e4ee.r2.cloudflarestorage.com
-        acl = private' > ~/.config/rclone/rclone.conf
+        acl = private' > $rconfig
 
     - name: Display r2 remote bucket files
       run: rclone tree releases
