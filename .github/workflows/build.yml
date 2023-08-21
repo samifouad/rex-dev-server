@@ -192,7 +192,9 @@ jobs:
       run: |
         mkdir -p dist
         for dir in */; do
-          tar -czvf "dist/${dir%/}.tar.gz" "$dir"
+          if [[ "$dir" != "dist/" ]]; then
+            tar -czvf "dist/${dir%/}.tar.gz" "$dir"
+          fi
         done
 
     - name: Copy artifacts to r2 bucket
