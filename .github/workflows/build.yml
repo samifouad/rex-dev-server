@@ -258,7 +258,7 @@ jobs:
         shell: bash
         run: |
           jq ". + {version: \"${{ env.CURRENT_TAG }}\"}" npm/rexds-windows-x64/package.json > npm/rexds-windows-x64/package.tmp.json && mv npm/rexds-windows-x64/package.tmp.json npm/rexds-windows-x64/package.json
-          cp rexds_${{ env.CURRENT_TAG }}_x86-64-pc-windows-msvc/rexds npm/rexds-windows-x64/rexds
+          cp rexds_${{ env.CURRENT_TAG }}_x86-64-pc-windows-msvc/rexds.exe npm/rexds-windows-x64/rexds.exe
 
       - name: Configure npm & publish
         run: |
