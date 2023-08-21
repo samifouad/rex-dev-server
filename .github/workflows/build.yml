@@ -88,29 +88,29 @@ jobs:
           name: rexds_${{ github.ref_name }}_x86-64-unknown-linux-musl
           path: /home/runner/work/rex-dev-server/rex-dev-server/main/target/x86_64-unknown-linux-musl/release/rexds
 
-  # job_4:
-  #   name: rexds_x86-64-pc-windows-msvc
-  #   runs-on: windows-latest
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v3
-  #       with:
-  #         path: main
-  #     - name: Install Rust Toolchain
-  #       uses: dtolnay/rust-toolchain@stable
-  #       with:
-  #           toolchain: stable
-  #           target: x86_64-pc-windows-msvc
-  #           components: rustfmt, clippy
-  #     - name: cargo build
-  #       shell: bash
-  #       run: |
-  #         cd D:/a/rex-dev-server/rex-dev-server/main && cargo build --release --target x86_64-pc-windows-msvc
-  #     - name: Results
-  #       uses: actions/upload-artifact@v3
-  #       with:
-  #         name: rexds_${{ github.ref_name }}_x86-64-pc-windows-msvc
-  #         path: D:/a/rex-dev-server/rex-dev-server/main/target/x86_64-pc-windows-msvc/release/rexds.exe
+  job_4:
+    name: rexds_x86-64-pc-windows-msvc
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          path: main
+      - name: Install Rust Toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+            toolchain: stable
+            target: x86_64-pc-windows-msvc
+            components: rustfmt, clippy
+      - name: cargo build
+        shell: bash
+        run: |
+          cd D:/a/rex-dev-server/rex-dev-server/main && cargo build --release --target x86_64-pc-windows-msvc
+      - name: Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: rexds_${{ github.ref_name }}_x86-64-pc-windows-msvc
+          path: D:/a/rex-dev-server/rex-dev-server/main/target/x86_64-pc-windows-msvc/release/rexds.exe
 
   # job_5:
   #   name: rexds_x86-64-apple-darwin
@@ -161,7 +161,7 @@ jobs:
   #         path: /Users/runner/work/rex-dev-server/rex-dev-server/main/target/aarch64-apple-darwin/release/rexds
 
   upload-to-cloudflare-r2:
-    needs: [job_3]
+    needs: [job_3, job_4]
     runs-on: ubuntu-latest
 
     steps:
@@ -201,7 +201,7 @@ jobs:
       run: rclone copy ./dist releases:rex-releases
 
 
-  publish-to-npm:
+  publish-linux-x64-to-npm:
     needs: [upload-to-cloudflare-r2]
     runs-on: ubuntu-latest      
     env:
@@ -215,17 +215,6 @@ jobs:
       - name: Download all artifacts
         uses: actions/download-artifact@v2
 
-      
-      - name: Install tree
-        shell: bash
-        run: |
-          sudo apt-get install tree -y
-
-      - name: sanity check
-        shell: bash
-        run: |
-          tree
-
       - name: Install jq
         shell: bash
         run: |
@@ -236,14 +225,76 @@ jobs:
         run: |
           jq ". + {version: \"${{ env.CURRENT_TAG }}\"}" npm/rexds-linux-x64-musl/package.json > npm/rexds-linux-x64-musl/package.tmp.json && mv npm/rexds-linux-x64-musl/package.tmp.json npm/rexds-linux-x64-musl/package.json
           cp rexds_${{ env.CURRENT_TAG }}_x86-64-unknown-linux-musl/rexds npm/rexds-linux-x64-musl/rexds
-      
-      - name: another sanity check
-        shell: bash
-        run: tree
 
       - name: Configure npm & publish
         run: |
           cd npm/rexds-linux-x64-musl
+          echo '//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}' > .npmrc
+          npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+
+  publish-windows-x64-to-npm:
+    needs: [upload-to-cloudflare-r2]
+    runs-on: ubuntu-latest      
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      CURRENT_TAG: ${{ github.ref_name }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v2
+
+      - name: Install jq
+        shell: bash
+        run: |
+          sudo apt-get install jq -y
+
+      - name: Prepare rexds-windows-x64's package.json and copy binary artifact
+        shell: bash
+        run: |
+          jq ". + {version: \"${{ env.CURRENT_TAG }}\"}" npm/rexds-windows-x64/package.json > npm/rexds-windows-x64/package.tmp.json && mv npm/rexds-windows-x64/package.tmp.json npm/rexds-windows-x64/package.json
+          cp rexds_${{ env.CURRENT_TAG }}_x86-64-pc-windows-msvc/rexds npm/rexds-windows-x64/rexds
+
+      - name: Configure npm & publish
+        run: |
+          cd npm/rexds-windows-x64
+          echo '//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}' > .npmrc
+          npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  publish-main-to-npm:
+    needs: [publish-windows-x64-to-npm, publish-linux-x64-to-npm]
+    runs-on: ubuntu-latest      
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      CURRENT_TAG: ${{ github.ref_name }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v2
+
+      - name: Install jq
+        shell: bash
+        run: |
+          sudo apt-get install jq -y
+
+      - name: Prepare package.json
+        shell: bash
+        run: |
+          jq ". + {version: \"${{ env.CURRENT_TAG }}\"}" npm/rexds/package.json > npm/rexds/package.tmp.json && mv npm/rexds/package.tmp.json npm/rexds/package.json
+
+      - name: Configure npm & publish
+        run: |
+          cd npm/rexds
           echo '//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}' > .npmrc
           npm publish --access public
         env:
