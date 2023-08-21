@@ -241,8 +241,10 @@ jobs:
         shell: bash
         run: tree
 
-      - name: pubish to npm
-        shell: bash
+      - name: Configure npm & publish
         run: |
           cd npm/rexds-linux-x64-musl
+          echo '//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}' > .npmrc
           npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
