@@ -220,15 +220,17 @@ jobs:
         run: sudo apt-get install tree -y
 
       - name: sanity check
-        run: tree -a
+        run: tree
 
       - name: Install jq
         run: sudo apt-get install jq -y
 
       - name: Prepare rexds-linux-x64-musl's package.json and publish
         run: |
-          cd npm/rexds-linux-x64-musl
-          jq ". + {version: \"$CURRENT_TAG\"}" package.json > package.tmp.json && mv package.tmp.json package.json
-          cp ../../rexds-linux-x64-musl/rexds rexds
+          jq ". + {version: \"${{ env.CURRENT_TAG }}\"}" npm/rexds-linux-x64-musl/package.json > npm/rexds-linux-x64-musl/package.tmp.json && mv npm/rexds-linux-x64-musl/package.tmp.json npm/rexds-linux-x64-musl/package.json
+          cp rexds_${{ env.CURRENT_TAG }}_x86-64-unknown-linux-musl/rexds npm/rexds-linux-x64-musl/rexds
           npm publish --access public
-          cd ../..
+
+      
+      - name: another sanity check
+        run: tree
