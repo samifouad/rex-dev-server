@@ -217,20 +217,32 @@ jobs:
 
       
       - name: Install tree
-        run: sudo apt-get install tree -y
+        shell: bash
+        run: |
+          sudo apt-get install tree -y
 
       - name: sanity check
-        run: tree
+        shell: bash
+        run: |
+          tree
 
       - name: Install jq
-        run: sudo apt-get install jq -y
+        shell: bash
+        run: |
+          sudo apt-get install jq -y
 
-      - name: Prepare rexds-linux-x64-musl's package.json and publish
+      - name: Prepare rexds-linux-x64-musl's package.json and copy binary artifact
+        shell: bash
         run: |
           jq ". + {version: \"${{ env.CURRENT_TAG }}\"}" npm/rexds-linux-x64-musl/package.json > npm/rexds-linux-x64-musl/package.tmp.json && mv npm/rexds-linux-x64-musl/package.tmp.json npm/rexds-linux-x64-musl/package.json
           cp rexds_${{ env.CURRENT_TAG }}_x86-64-unknown-linux-musl/rexds npm/rexds-linux-x64-musl/rexds
-          npm publish --access public
-
       
       - name: another sanity check
+        shell: bash
         run: tree
+
+      - name: pubish to npm
+        shell: bash
+        run: |
+          cd npm/rexds-linux-x64-musl
+          npm publish --access public
