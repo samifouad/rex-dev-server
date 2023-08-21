@@ -6,29 +6,29 @@ on:
       - '*'
 
 jobs:
-  job_1:
-    name: rexds_x86-64-unknown-freebsd
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          path: main
-      - name: Install Rust Toolchain
-        uses: dtolnay/rust-toolchain@stable
-        with:
-            toolchain: stable
-            target: x86_64-unknown-freebsd
-            components: rustfmt, clippy
-      - name: cargo build
-        shell: bash
-        run: |
-          cd /home/runner/work/rex-dev-server/rex-dev-server/main && cargo build --release --target x86_64-unknown-freebsd
-      - name: Results
-        uses: actions/upload-artifact@v3
-        with:
-          name: rexds_${{ github.ref_name }}_x86-64-unknown-freebsd
-          path: /home/runner/work/rex-dev-server/rex-dev-server/main/target/x86_64-unknown-freebsd/release/rexds
+  # job_1:
+  #   name: rexds_x86-64-unknown-freebsd
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v3
+  #       with:
+  #         path: main
+  #     - name: Install Rust Toolchain
+  #       uses: dtolnay/rust-toolchain@stable
+  #       with:
+  #           toolchain: stable
+  #           target: x86_64-unknown-freebsd
+  #           components: rustfmt, clippy
+  #     - name: cargo build
+  #       shell: bash
+  #       run: |
+  #         cd /home/runner/work/rex-dev-server/rex-dev-server/main && cargo build --release --target x86_64-unknown-freebsd
+  #     - name: Results
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: rexds_${{ github.ref_name }}_x86-64-unknown-freebsd
+  #         path: /home/runner/work/rex-dev-server/rex-dev-server/main/target/x86_64-unknown-freebsd/release/rexds
   
   # job_2: 
   #   name: Linux ARM64 musl
@@ -161,7 +161,7 @@ jobs:
           path: /Users/runner/work/rex-dev-server/rex-dev-server/main/target/aarch64-apple-darwin/release/rexds
 
   upload-to-cloudflare-r2:
-    needs: [job_1, job_3, job_4, job_5, job_6]
+    needs: [job_3, job_4, job_5, job_6]
     runs-on: ubuntu-latest
 
     steps:
