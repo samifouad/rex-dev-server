@@ -1,6 +1,5 @@
 {
     "name": "@fromafrica/rexds-windows-x64",
-    "version": "0.3.0",
     "description": "rexds's windows-x64",
     "main": "rexds.exe",
     "bin": {
@@ -8,6 +7,18 @@
     },
     "os": ["win32"],
     "cpu": ["x64"],
+    "repository": "https://github.com/fromafrica/rex-dev-server",
+    "homepage": "https://rex.rs",
+    "keywords": [
+      "rex",
+      "rexds",
+      "rex development server",
+      "frontend dev server",
+      "javascript dev server",
+      "fromafrica",
+      "from africa",
+      "from africa with love"
+    ],
     "author": "Sami Fouad - @fromafrica",
     "license": "GPL-2.0"
   }

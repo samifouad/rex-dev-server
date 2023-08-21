@@ -1,6 +1,5 @@
 {
   "name": "@fromafrica/rexds-darwin-arm64",
-  "version": "0.3.0",
   "description": "rexds's darwin-arm64",
   "main": "rexds",
   "bin": {
@@ -8,9 +7,18 @@
   },
   "os": ["darwin"],
   "cpu": ["arm64"],
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "repository": "https://github.com/fromafrica/rex-dev-server",
+  "homepage": "https://rex.rs",
+  "keywords": [
+    "rex",
+    "rexds",
+    "rex development server",
+    "frontend dev server",
+    "javascript dev server",
+    "fromafrica",
+    "from africa",
+    "from africa with love"
+  ],
   "author": "Sami Fouad - @fromafrica",
   "license": "GPL-2.0"
 }

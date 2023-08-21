@@ -201,7 +201,10 @@ jobs:
 
   publish-to-npm:
     needs: [upload-to-cloudflare-r2]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest      
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      CURRENT_TAG: ${{ github.ref_name }}
 
     steps:
       - name: Checkout code
@@ -211,7 +214,18 @@ jobs:
         uses: actions/download-artifact@v2
 
       - name: Install jq
-        run: sudo apt-get install jq
+        run: sudo apt-get install jq -y
 
-      - name: Sanity check
-        run: ls -l
+      - name: Prepare rexds-linux-x64-musl's package.json and publish
+        run: |
+          cd npm/rexds-linux-x64-musl
+          jq ". + {version: \"$CURRENT_TAG\"}" package.json > package.tmp.json && mv package.tmp.json package.json
+          cp ../../rexds-linux-x64-musl/rexds rexds
+          npm publish --access public
+          cd ../..
+
+      - name: Install tree
+        run: sudo apt-get install tree -y
+
+      - name: sanity check
+        run: tree -a
