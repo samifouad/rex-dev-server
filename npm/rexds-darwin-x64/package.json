@@ -1,0 +1,16 @@
+{
+    "name": "@fromafrica/rexds-darwin-x64",
+    "version": "0.3.0",
+    "description": "rexds's darwin-x64",
+    "main": "rexds",
+    "bin": {
+      "rexds": "./rexds"
+    },
+    "os": ["darwin"],
+    "cpu": ["x64"],
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Sami Fouad - @fromafrica",
+    "license": "GPL-2.0"
+  }

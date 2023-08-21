@@ -1,0 +1,26 @@
+{
+  "name": "rexds",
+  "version": "0.2.33",
+  "description": "rex development server",
+  "repository": "https://github.com/fromafrica/rex-dev-server",
+  "homepage": "https://rex.rs",
+  "keywords": [
+    "rex",
+    "rexds",
+    "rex development server",
+    "frontend dev server",
+    "javascript dev server",
+    "fromafrica",
+    "from africa",
+    "from africa with love"
+  ],
+  "author": "Sami Fouad - @fromafrica",
+  "license": "GPL-2.0",
+  "optionalDependencies": {
+    "@fromafrica/rexds-darwin-arm64": "*",
+    "@fromafrica/rexds-darwin-x64": "*",
+    "@fromafrica/rexds-freebsd-x64-gnu": "*",
+    "@fromafrica/rexds-linux-x64-musl": "*",
+    "@fromafrica/rexds-windows-x64": "*"
+  }
+}

@@ -7,7 +7,7 @@ on:
 
 jobs:
   job_1:
-    name: rexds_x86-64-unknown-linux-gnu
+    name: rexds_x86-64-unknown-freebsd
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -18,17 +18,17 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
         with:
             toolchain: stable
-            target: x86_64-unknown-linux-gnu
+            target: x86_64-unknown-freebsd
             components: rustfmt, clippy
       - name: cargo build
         shell: bash
         run: |
-          cd /home/runner/work/rex-dev-server/rex-dev-server/main && cargo build --release --target x86_64-unknown-linux-gnu
+          cd /home/runner/work/rex-dev-server/rex-dev-server/main && cargo build --release --target x86_64-unknown-freebsd
       - name: Results
         uses: actions/upload-artifact@v3
         with:
-          name: rexds_${{ github.ref_name }}_x86-64-unknown-linux-gnu
-          path: /home/runner/work/rex-dev-server/rex-dev-server/main/target/x86_64-unknown-linux-gnu/release/rexds
+          name: rexds_${{ github.ref_name }}_x86-64-unknown-freebsd
+          path: /home/runner/work/rex-dev-server/rex-dev-server/main/target/x86_64-unknown-freebsd/release/rexds
   
   # job_2: 
   #   name: Linux ARM64 musl
@@ -187,7 +187,31 @@ jobs:
     - name: Download all artifacts
       uses: actions/download-artifact@v2
 
-    - name: Copy artifacts to r2 bucket
-      run: rclone copy ./ releases:rex-releases
+    - name: Make dist folder & compress artifacts
+      shell: bash
+      run: |
+        mkdir -p dist
+        for dir in */; do
+          tar -czvf "dist/${dir%/}.tar.gz" "$dir"
+        done
 
-    
+    - name: Copy artifacts to r2 bucket
+      run: rclone copy ./dist releases:rex-releases
+
+
+  publish-to-npm:
+    needs: [upload-to-cloudflare-r2]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v2
+
+      - name: Install jq
+        run: sudo apt-get install jq
+
+      - name: Sanity check
+        run: ls -l

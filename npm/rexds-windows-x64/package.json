@@ -1,0 +1,13 @@
+{
+    "name": "@fromafrica/rexds-windows-x64",
+    "version": "0.3.0",
+    "description": "rexds's windows-x64",
+    "main": "rexds.exe",
+    "bin": {
+      "rexds": "./rexds.exe"
+    },
+    "os": ["win32"],
+    "cpu": ["x64"],
+    "author": "Sami Fouad - @fromafrica",
+    "license": "GPL-2.0"
+  }

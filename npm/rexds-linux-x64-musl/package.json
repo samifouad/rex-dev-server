@@ -1,0 +1,13 @@
+{
+    "name": "@fromafrica/rexds-linux-x64-musl",
+    "version": "0.3.0",
+    "description": "rexds's linux-x64-musl",
+    "main": "rexds",
+    "bin": {
+      "rexds": "./rexds"
+    },
+    "os": ["linux"],
+    "cpu": ["x64"],
+    "author": "Sami Fouad - @fromafrica",
+    "license": "GPL-2.0"
+  }
