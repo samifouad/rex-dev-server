@@ -17,7 +17,7 @@ switch (os.platform()) {
             : `node_modules/@fromafrica/rexds-darwin-arm64/${binaryName}`;
         break;
     case 'win32':
-        binaryPath = `node_modules/@fromafrica/rexds-windows-x64/${binaryName}`;
+        binaryPath = process.cwd() +'\\node_modules\\rexds\\node_modules\\@fromafrica\\rexds-windows-x64\\rexds.exe';
         break;
     case 'linux':
         binaryPath = `node_modules/@fromafrica/rexds-linux-x64-musl/${binaryName}`;
