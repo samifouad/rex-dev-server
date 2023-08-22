@@ -1,6 +1,9 @@
 {
   "name": "rexds",
   "description": "rex development server",
+  "bin": {
+    "rexds": "./bin.js"
+  },
   "repository": "https://github.com/fromafrica/rex-dev-server",
   "homepage": "https://rex.rs",
   "keywords": [
