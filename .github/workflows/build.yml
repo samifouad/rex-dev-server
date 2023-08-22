@@ -112,56 +112,56 @@ jobs:
           name: rexds_${{ github.ref_name }}_x86-64-pc-windows-msvc
           path: D:/a/rex-dev-server/rex-dev-server/main/target/x86_64-pc-windows-msvc/release/rexds.exe
 
-  # job_5:
-  #   name: rexds_x86-64-apple-darwin
-  #   runs-on: macOS-latest
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v3
-  #       with:
-  #         path: main
-  #     - name: Install Rust Toolchain
-  #       uses: dtolnay/rust-toolchain@stable
-  #       with:
-  #           toolchain: stable
-  #           target: aarch64-apple-darwin
-  #           components: rustfmt, clippy
-  #     - name: cargo build
-  #       shell: bash
-  #       run: |
-  #         cd /Users/runner/work/rex-dev-server/rex-dev-server/main && cargo build --release --target x86_64-apple-darwin
-  #     - name: Results
-  #       uses: actions/upload-artifact@v3
-  #       with:
-  #         name: rexds_${{ github.ref_name }}_x86-64-apple-darwin
-  #         path: /Users/runner/work/rex-dev-server/rex-dev-server/main/target/x86_64-apple-darwin/release/rexds
+  job_5:
+    name: rexds_x86-64-apple-darwin
+    runs-on: macOS-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          path: main
+      - name: Install Rust Toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+            toolchain: stable
+            target: aarch64-apple-darwin
+            components: rustfmt, clippy
+      - name: cargo build
+        shell: bash
+        run: |
+          cd /Users/runner/work/rex-dev-server/rex-dev-server/main && cargo build --release --target x86_64-apple-darwin
+      - name: Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: rexds_${{ github.ref_name }}_x86-64-apple-darwin
+          path: /Users/runner/work/rex-dev-server/rex-dev-server/main/target/x86_64-apple-darwin/release/rexds
 
-  # job_6:
-  #   name: rexds_aarch64-apple-darwin
-  #   runs-on: macOS-latest 
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v3
-  #       with:
-  #         path: main
-  #     - name: Install Rust Toolchain
-  #       uses: dtolnay/rust-toolchain@stable
-  #       with:
-  #           toolchain: stable
-  #           target: aarch64-apple-darwin
-  #           components: rustfmt, clippy
-  #     - name: cargo build
-  #       shell: bash
-  #       run: |
-  #         cd /Users/runner/work/rex-dev-server/rex-dev-server/main && cargo build --release --target aarch64-apple-darwin
-  #     - name: Results
-  #       uses: actions/upload-artifact@v3
-  #       with:
-  #         name: rexds_${{ github.ref_name }}_aarch64-apple-darwin
-  #         path: /Users/runner/work/rex-dev-server/rex-dev-server/main/target/aarch64-apple-darwin/release/rexds
+  job_6:
+    name: rexds_aarch64-apple-darwin
+    runs-on: macOS-latest 
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          path: main
+      - name: Install Rust Toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+            toolchain: stable
+            target: aarch64-apple-darwin
+            components: rustfmt, clippy
+      - name: cargo build
+        shell: bash
+        run: |
+          cd /Users/runner/work/rex-dev-server/rex-dev-server/main && cargo build --release --target aarch64-apple-darwin
+      - name: Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: rexds_${{ github.ref_name }}_aarch64-apple-darwin
+          path: /Users/runner/work/rex-dev-server/rex-dev-server/main/target/aarch64-apple-darwin/release/rexds
 
   upload-to-cloudflare-r2:
-    needs: [job_3, job_4]
+    needs: [job_3, job_4, job_5, job_6]
     runs-on: ubuntu-latest
 
     steps:
@@ -268,8 +268,74 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+  publish-darwin-x64-to-npm:
+    needs: [upload-to-cloudflare-r2]
+    runs-on: ubuntu-latest      
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      CURRENT_TAG: ${{ github.ref_name }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v2
+
+      - name: Install jq
+        shell: bash
+        run: |
+          sudo apt-get install jq -y
+
+      - name: Prepare rexds-darwin-x64's package.json and copy binary artifact
+        shell: bash
+        run: |
+          jq ". + {version: \"${{ env.CURRENT_TAG }}\"}" npm/rexds-darwin-x64/package.json > npm/rexds-darwin-x64/package.tmp.json && mv npm/rexds-darwin-x64/package.tmp.json npm/rexds-darwin-x64/package.json
+          cp rexds_${{ env.CURRENT_TAG }}_x86-64-apple-darwin/rexds npm/rexds-darwin-x64/rexds
+
+      - name: Configure npm & publish
+        run: |
+          cd npm/rexds-darwin-x64
+          echo '//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}' > .npmrc
+          npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  publish-darwin-arm64-to-npm:
+    needs: [upload-to-cloudflare-r2]
+    runs-on: ubuntu-latest      
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      CURRENT_TAG: ${{ github.ref_name }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v2
+
+      - name: Install jq
+        shell: bash
+        run: |
+          sudo apt-get install jq -y
+
+      - name: Prepare rexds-darwin-arm64's package.json and copy binary artifact
+        shell: bash
+        run: |
+          jq ". + {version: \"${{ env.CURRENT_TAG }}\"}" npm/rexds-darwin-arm64/package.json > npm/rexds-darwin-arm64/package.tmp.json && mv npm/rexds-darwin-arm64/package.tmp.json npm/rexds-darwin-arm64/package.json
+          cp rexds_${{ env.CURRENT_TAG }}_aarch64-apple-darwin/rexds npm/rexds-darwin-arm64/rexds
+
+      - name: Configure npm & publish
+        run: |
+          cd npm/rexds-darwin-arm64
+          echo '//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}' > .npmrc
+          npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
   publish-main-to-npm:
-    needs: [publish-windows-x64-to-npm, publish-linux-x64-to-npm]
+    needs: [publish-windows-x64-to-npm, publish-linux-x64-to-npm, publish-darwin-x64-to-npm, publish-darwin-arm64-to-npm]
     runs-on: ubuntu-latest      
     env:
       NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
