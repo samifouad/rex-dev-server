@@ -1,26 +1,21 @@
 #!/usr/bin/env node
-
 const { execSync } = require('child_process');
 const os = require('os');
 
-let binaryName = 'rexds';
-if (os.platform() === 'win32') {
-    binaryName += '.exe';
-}
-
 let binaryPath;
+let npmGlobal = execSync("npm root -g").toString().trim();
 
 switch (os.platform()) {
     case 'darwin':
         binaryPath = os.arch() === 'x64'
-            ? `node_modules/@fromafrica/rexds-darwin-x64/${binaryName}`
-            : `node_modules/@fromafrica/rexds-darwin-arm64/${binaryName}`;
+            ? npmGlobal +'/rexds/node_modules/@fromafrica/rexds-darwin-x64/rexds'
+            : npmGlobal +'/rexds/node_modules/@fromafrica/rexds-darwin-arm64/rexds';
         break;
     case 'win32':
-        binaryPath = process.cwd() +'\\node_modules\\rexds\\node_modules\\@fromafrica\\rexds-windows-x64\\rexds.exe';
+        binaryPath = npmGlobal +'\\rexds\\node_modules\\@fromafrica\\rexds-windows-x64\\rexds.exe';
         break;
     case 'linux':
-        binaryPath = `node_modules/@fromafrica/rexds-linux-x64-musl/${binaryName}`;
+        binaryPath = npmGlobal +'/rexds/node_modules/@fromafrica/rexds-linux-x64-musl/rexds';
     default:
         console.error(`Unsupported platform: ${os.platform()}`);
         process.exit(1);
