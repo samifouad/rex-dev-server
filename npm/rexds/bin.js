@@ -5,7 +5,7 @@ const os = require('os');
 let binaryPath;
 let npmGlobal = execSync("npm root -g").toString().trim();
 
-switch (os.platform()) {
+switch (os.platform().toString().trim()) {
     case 'darwin':
         binaryPath = os.arch() === 'x64'
             ? npmGlobal +'/rexds/node_modules/@fromafrica/rexds-darwin-x64/rexds'
@@ -16,6 +16,7 @@ switch (os.platform()) {
         break;
     case 'linux':
         binaryPath = npmGlobal +'/rexds/node_modules/@fromafrica/rexds-linux-x64-musl/rexds';
+        break;
     default:
         console.error(`Unsupported platform: ${os.platform()}`);
         process.exit(1);
