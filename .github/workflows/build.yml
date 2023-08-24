@@ -85,7 +85,7 @@ jobs:
         shell: bash
         run: |
           curl -L https://github.com/mozilla/sccache/releases/download/v0.5.4/sccache-dist-v0.5.4-x86_64-unknown-linux-musl.tar.gz | tar xz
-          sudo mv sccache-0.2.15-x86_64-unknown-linux-musl/sccache /usr/local/bin/
+          sudo mv sccache-dist-v0.5.4-x86_64-unknown-linux-musl/sccache /usr/local/bin/
           which sccache
 
       - name: cargo build
@@ -120,9 +120,9 @@ jobs:
       - name: install sccache
         shell: powershell
         run: |
-          Invoke-WebRequest -Uri "https://github.com/mozilla/sccache/releases/download/0.2.15/sccache-0.2.15-x86_64-pc-windows-msvc.tar.gz" -OutFile "sccache.tar.gz"
+          Invoke-WebRequest -Uri "https://github.com/mozilla/sccache/releases/download/0.5.4/sccache-0.5.4-x86_64-pc-windows-msvc.tar.gz" -OutFile "sccache.tar.gz"
           tar -xf sccache.tar.gz
-          Move-Item -Path "sccache-0.2.15-x86_64-pc-windows-msvc\sccache.exe" -Destination "${env:ProgramFiles}\sccache.exe"
+          Move-Item -Path "sccache-0.5.4-x86_64-pc-windows-msvc\sccache.exe" -Destination "${env:ProgramFiles}\sccache.exe"
           sccache --version
 
       - name: cargo build
@@ -154,8 +154,8 @@ jobs:
       - name: install sccache
         shell: bash
         run: |
-          curl -L https://github.com/mozilla/sccache/releases/download/v0.5.4/sccache-dist-v0.5.4-x86_64-unknown-linux-musl.tar.gz | tar xz
-          sudo mv sccache-0.2.15-x86_64-apple-darwin/sccache /usr/local/bin/
+          curl -L https://github.com/mozilla/sccache/releases/download/v0.5.4/sccache-v0.5.4-x86_64-apple-darwin.tar.gz | tar xz
+          sudo mv sccache-v0.5.4-x86_64-apple-darwin/sccache /usr/local/bin/
           which sccache
 
       - name: cargo build
@@ -192,8 +192,8 @@ jobs:
       - name: install sccache
         shell: bash
         run: |
-          curl -L https://github.com/mozilla/sccache/releases/download/v0.5.4/sccache-dist-v0.5.4-x86_64-unknown-linux-musl.tar.gz | tar xz
-          sudo mv sccache-0.2.15-x86_64-apple-darwin/sccache /usr/local/bin/
+          curl -L https://github.com/mozilla/sccache/releases/download/v0.5.4/sccache-v0.5.4-aarch64-apple-darwin.tar.gz | tar xz
+          sudo mv sccache-v0.5.4-aarch64-apple-darwin/sccache /usr/local/bin/
           which sccache
 
       - name: cargo build
