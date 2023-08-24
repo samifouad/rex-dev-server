@@ -117,14 +117,12 @@ jobs:
             target: x86_64-pc-windows-msvc
             components: rustfmt, clippy
 
-      - name: install sccache
-        shell: powershell
+      - name: Fetch and setup sccache
         run: |
           Invoke-WebRequest -Uri "https://github.com/mozilla/sccache/releases/download/v0.5.4/sccache-v0.5.4-x86_64-pc-windows-msvc.tar.gz" -OutFile "sccache.tar.gz"
           tar -xf sccache.tar.gz
-          Move-Item -Path "sccache-v0.5.4-x86_64-pc-windows-msvc\sccache.exe" -Destination "${env:ProgramFiles}\sccache.exe"
-          echo "${env:ProgramFiles}" | Out-File -Append -FilePath $env:GITHUB_PATH
-          sccache --version
+          .\sccache-v0.5.4-x86_64-pc-windows-msvc\sccache.exe --version
+        shell: powershell
 
       - name: cargo build
         shell: bash
