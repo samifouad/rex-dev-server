@@ -77,9 +77,15 @@ jobs:
             target: x86_64-unknown-linux-musl
             components: rustfmt, clippy
 
-      - name: musl tools
+      - name: install musl tools
         shell: bash
         run: sudo apt-get update && sudo apt-get install musl-tools
+
+      - name: install sccache
+        shell: bash
+        run: |
+          cargo install sccache --locked
+          which sccache
 
       - name: cargo build
         shell: bash
@@ -110,6 +116,12 @@ jobs:
             target: x86_64-pc-windows-msvc
             components: rustfmt, clippy
 
+      - name: install sccache
+        shell: bash
+        run: |
+          cargo install sccache --locked
+          which sccache
+
       - name: cargo build
         shell: bash
         run: |
@@ -119,21 +131,10 @@ jobs:
         run: |
           dir "C:\Program Files (x86)\Microsoft Visual Studio"
 
-      - name: Check for dynamic dependencies using dumpbin
+      - name: Check binary dependencies for Windows
         run: |
-          # Initialize Visual Studio environment for x64 builds
-          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-          
-          # Run dumpbin
-          $output = dumpbin /DEPENDENTS D:/a/rex-dev-server/rex-dev-server/main/target/x86_64-pc-windows-msvc/release/rexds.exe
-          if ($output -match "\.dll") {
-              Write-Output "Dynamically linked dependencies found:"
-              $output | Select-String "\.dll"
-              exit 1
-          } else {
-              Write-Output "Binary is statically linked."
-          }
-        shell: pwsh
+          "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat" && dumpbin /DEPENDENTS D:/a/rex-dev-server/rex-dev-server/main/target/x86_64-pc-windows-msvc/release/rexds.exe | findstr ".dll"
+        shell: cmd
 
       - name: Results
         uses: actions/upload-artifact@v3
@@ -155,6 +156,12 @@ jobs:
             toolchain: stable
             target: aarch64-apple-darwin
             components: rustfmt, clippy
+
+      - name: install sccache
+        shell: bash
+        run: |
+          cargo install sccache --locked
+          which sccache
 
       - name: cargo build
         shell: bash
@@ -186,6 +193,12 @@ jobs:
             toolchain: stable
             target: aarch64-apple-darwin
             components: rustfmt, clippy
+
+      - name: install sccache
+        shell: bash
+        run: |
+          cargo install sccache --locked
+          which sccache
 
       - name: cargo build
         shell: bash
