@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 const { execSync } = require('child_process');
 const os = require('os');
+const fs = require('fs');
 
 let binaryPath;
 
@@ -16,8 +17,8 @@ switch (os.platform().toString().trim()) {
         binaryPath = winNpmGlobal +'\\rexds\\node_modules\\@fromafrica\\rexds-windows-x64\\rexds.exe';
         break;
     case 'linux':
-        let linuxNpmGlobal = execSync("npm root -g").toString().trim().split('/').slice(0, -1).join('/');
-        binaryPath = linuxNpmGlobal +'/node_modules/rexds/node_modules/@fromafrica/rexds-linux-x64-musl/rexds';
+        let linuxNpmGlobal = execSync("npm root -g").toString().trim();
+        binaryPath = fs.realpathSync(linuxNpmGlobal +'/node_modules/rexds/node_modules/@fromafrica/rexds-linux-x64-musl/rexds');
         break;
     default:
         console.error(`Unsupported platform: ${os.platform()}`);
