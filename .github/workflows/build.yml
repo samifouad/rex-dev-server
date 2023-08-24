@@ -122,8 +122,8 @@ jobs:
         run: |
           Invoke-WebRequest -Uri "https://github.com/mozilla/sccache/releases/download/v0.5.4/sccache-v0.5.4-x86_64-pc-windows-msvc.tar.gz" -OutFile "sccache.tar.gz"
           tar -xf sccache.tar.gz
-          Move-Item -Path "sccache-0.5.4-x86_64-pc-windows-msvc\sccache.exe" -Destination "${env:ProgramFiles}\sccache.exe"
-          sccache --version
+          tree \
+          
 
       - name: cargo build
         shell: bash
