@@ -96,7 +96,7 @@ jobs:
         run: ldd /home/runner/work/rex-dev-server/rex-dev-server/main/target/x86_64-unknown-linux-musl/release/rexds
 
       - name: Check sccache stats
-        run: scache --show-stats
+        run: sccache --show-stats
 
       - name: Results
         uses: actions/upload-artifact@v3
@@ -135,7 +135,7 @@ jobs:
 
 
       - name: Check sccache stats
-        run: scache --show-stats
+        run: sccache --show-stats
 
       - name: Results
         uses: actions/upload-artifact@v3
@@ -178,7 +178,7 @@ jobs:
           otool -L /Users/runner/work/rex-dev-server/rex-dev-server/main/target/x86_64-apple-darwin/release/rexds
           
       - name: Check sccache stats
-        run: scache --show-stats
+        run: sccache --show-stats
 
       - name: Results
         uses: actions/upload-artifact@v3
@@ -221,8 +221,8 @@ jobs:
           otool -L /Users/runner/work/rex-dev-server/rex-dev-server/main/target/aarch64-apple-darwin/release/rexds
         
       - name: Check sccache stats
-        run: scache --show-stats
-        
+        run: sccache --show-stats
+
       - name: Results
         uses: actions/upload-artifact@v3
         with:
