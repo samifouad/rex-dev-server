@@ -84,7 +84,8 @@ jobs:
       - name: install sccache
         shell: bash
         run: |
-          cargo install sccache --locked
+          curl -L https://github.com/mozilla/sccache/releases/download/v0.5.4/sccache-dist-v0.5.4-x86_64-unknown-linux-musl.tar.gz | tar xz
+          sudo mv sccache-0.2.15-x86_64-unknown-linux-musl/sccache /usr/local/bin/
           which sccache
 
       - name: cargo build
@@ -117,24 +118,17 @@ jobs:
             components: rustfmt, clippy
 
       - name: install sccache
-        shell: bash
+        shell: powershell
         run: |
-          cargo install sccache --locked
-          which sccache
+          Invoke-WebRequest -Uri "https://github.com/mozilla/sccache/releases/download/0.2.15/sccache-0.2.15-x86_64-pc-windows-msvc.tar.gz" -OutFile "sccache.tar.gz"
+          tar -xf sccache.tar.gz
+          Move-Item -Path "sccache-0.2.15-x86_64-pc-windows-msvc\sccache.exe" -Destination "${env:ProgramFiles}\sccache.exe"
+          sccache --version
 
       - name: cargo build
         shell: bash
         run: |
           cd D:/a/rex-dev-server/rex-dev-server/main && cargo build --release --target x86_64-pc-windows-msvc
-
-      - name: List Visual Studio installations
-        run: |
-          dir "C:\Program Files (x86)\Microsoft Visual Studio"
-
-      - name: Check binary dependencies for Windows
-        run: |
-          "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat" && dumpbin /DEPENDENTS D:/a/rex-dev-server/rex-dev-server/main/target/x86_64-pc-windows-msvc/release/rexds.exe | findstr ".dll"
-        shell: cmd
 
       - name: Results
         uses: actions/upload-artifact@v3
@@ -160,7 +154,8 @@ jobs:
       - name: install sccache
         shell: bash
         run: |
-          cargo install sccache --locked
+          curl -L https://github.com/mozilla/sccache/releases/download/v0.5.4/sccache-dist-v0.5.4-x86_64-unknown-linux-musl.tar.gz | tar xz
+          sudo mv sccache-0.2.15-x86_64-apple-darwin/sccache /usr/local/bin/
           which sccache
 
       - name: cargo build
@@ -197,7 +192,8 @@ jobs:
       - name: install sccache
         shell: bash
         run: |
-          cargo install sccache --locked
+          curl -L https://github.com/mozilla/sccache/releases/download/v0.5.4/sccache-dist-v0.5.4-x86_64-unknown-linux-musl.tar.gz | tar xz
+          sudo mv sccache-0.2.15-x86_64-apple-darwin/sccache /usr/local/bin/
           which sccache
 
       - name: cargo build
