@@ -18,7 +18,7 @@ switch (os.platform().toString().trim()) {
         break;
     case 'linux':
         let linuxNpmGlobal = execSync("npm root -g").toString().trim();
-        binaryPath = fs.realpathSync(linuxNpmGlobal +'/node_modules/rexds/node_modules/@fromafrica/rexds-linux-x64-musl/rexds');
+        binaryPath = fs.realpathSync(linuxNpmGlobal +'/rexds/node_modules/@fromafrica/rexds-linux-x64-musl/rexds');
         break;
     default:
         console.error(`Unsupported platform: ${os.platform()}`);
