@@ -195,9 +195,9 @@ jobs:
       - name: List dynamic dependencies for macOS binary
         run: |
           echo "Listing dynamic libraries for the binary:"
-          otool -L /Users/runner/work/rex-dev-server/rex-dev-server/main/target/x86_64-apple-darwin/release/rexds
+          otool -L /Users/runner/work/rex-dev-server/rex-dev-server/main/target/aarch64-apple-darwin/release/rexds
+        
     
-
       - name: Results
         uses: actions/upload-artifact@v3
         with:
