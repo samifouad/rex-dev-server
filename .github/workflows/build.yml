@@ -117,7 +117,6 @@ jobs:
       SCCACHE_ENDPOINT: ${{ secrets.SCCACHE_ENDPOINT }}
       SCCACHE_S3_USE_SSL: true
       SCCACHE_REGION: auto
-      RUSTC_WRAPPER: sccache.exe
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     steps:
@@ -149,19 +148,14 @@ jobs:
           tar -xf sccache.tar.gz
           Move-Item -Path ".\sccache-v0.5.4-x86_64-pc-windows-msvc\sccache.exe" -Destination "$env:GITHUB_WORKSPACE"
           
-          # Checking the existence of sccache.exe after moving
-          if (Test-Path "$env:GITHUB_WORKSPACE\sccache.exe") {
-            Write-Output "sccache.exe is present in workspace"
-          } else {
-            Write-Output "sccache.exe is NOT present in workspace"
-            exit 1
-          }
-      
-          # Append the workspace to the GITHUB_PATH to make sccache available globally
-          echo "$env:GITHUB_WORKSPACE" | Out-File -Append $env:GITHUB_PATH
+          Write-Output "Current GitHub Workspace: $env:GITHUB_WORKSPACE"
+          Get-Item "$env:GITHUB_WORKSPACE\sccache.exe"
+          
+          # Adjusting PATH for this session
+          $env:PATH = "$env:GITHUB_WORKSPACE;" + $env:PATH
       
           sccache.exe --version
-
+      
           cd D:/a/rex-dev-server/rex-dev-server/main
           cargo --version
           rustc --version
@@ -169,6 +163,7 @@ jobs:
           cargo build --release --target x86_64-pc-windows-msvc
         env:
           RUSTC_WRAPPER: sccache.exe
+        shell: powershell
 
       - name: Results
         uses: actions/upload-artifact@v3
