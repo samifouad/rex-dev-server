@@ -151,8 +151,9 @@ jobs:
         shell: powershell
 
       - name: cargo build
-        shell: bash
+        shell: powershell
         run: |
+          tree \
           cd D:/a/rex-dev-server/rex-dev-server/main && cargo build --release --target x86_64-pc-windows-msvc
 
       - name: Check sccache stats
