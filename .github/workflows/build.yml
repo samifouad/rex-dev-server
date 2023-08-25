@@ -148,6 +148,7 @@ jobs:
           Invoke-WebRequest -Uri "https://github.com/mozilla/sccache/releases/download/v0.5.4/sccache-v0.5.4-x86_64-pc-windows-msvc.tar.gz" -OutFile "sccache.tar.gz"
           tar -xf sccache.tar.gz
           Move-Item -Path ".\sccache-v0.5.4-x86_64-pc-windows-msvc\sccache.exe" -Destination "$env:GITHUB_WORKSPACE"
+          
           # Checking the existence of sccache.exe after moving
           if (Test-Path "$env:GITHUB_WORKSPACE\sccache.exe") {
             Write-Output "sccache.exe is present in workspace"
@@ -155,8 +156,10 @@ jobs:
             Write-Output "sccache.exe is NOT present in workspace"
             exit 1
           }
-          # Modifying PATH directly
-          $env:PATH += ";$env:GITHUB_WORKSPACE"
+      
+          # Append the workspace to the GITHUB_PATH to make sccache available globally
+          echo "$env:GITHUB_WORKSPACE" | Out-File -Append $env:GITHUB_PATH
+      
           sccache --version
         shell: powershell
 
@@ -168,6 +171,8 @@ jobs:
           rustc --version
           echo $env:path --split ";"
           cargo build --release --target x86_64-pc-windows-msvc
+        env:
+          RUSTC_WRAPPER: sccache
 
       - name: Check sccache stats
         run: sccache --show-stats
