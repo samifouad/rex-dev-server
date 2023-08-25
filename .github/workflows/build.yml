@@ -143,7 +143,7 @@ jobs:
           rustup target add x86_64-pc-windows-msvc
         shell: powershell
 
-      - name: Fetch and setup sccache
+      - name: Fetch and setup sccache, run cargo build
         run: |
           Invoke-WebRequest -Uri "https://github.com/mozilla/sccache/releases/download/v0.5.4/sccache-v0.5.4-x86_64-pc-windows-msvc.tar.gz" -OutFile "sccache.tar.gz"
           tar -xf sccache.tar.gz
@@ -161,11 +161,7 @@ jobs:
           echo "$env:GITHUB_WORKSPACE" | Out-File -Append $env:GITHUB_PATH
       
           sccache --version
-        shell: powershell
 
-      - name: cargo build
-        shell: powershell
-        run: |
           cd D:/a/rex-dev-server/rex-dev-server/main
           cargo --version
           rustc --version
@@ -173,9 +169,6 @@ jobs:
           cargo build --release --target x86_64-pc-windows-msvc
         env:
           RUSTC_WRAPPER: sccache
-
-      - name: Check sccache stats
-        run: sccache --show-stats
 
       - name: Results
         uses: actions/upload-artifact@v3
