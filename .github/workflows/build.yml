@@ -117,7 +117,7 @@ jobs:
       SCCACHE_ENDPOINT: ${{ secrets.SCCACHE_ENDPOINT }}
       SCCACHE_S3_USE_SSL: true
       SCCACHE_REGION: auto
-      RUSTC_WRAPPER: sccache
+      RUSTC_WRAPPER: sccache.exe
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     steps:
@@ -160,7 +160,7 @@ jobs:
           # Append the workspace to the GITHUB_PATH to make sccache available globally
           echo "$env:GITHUB_WORKSPACE" | Out-File -Append $env:GITHUB_PATH
       
-          sccache --version
+          sccache.exe --version
 
           cd D:/a/rex-dev-server/rex-dev-server/main
           cargo --version
@@ -168,7 +168,7 @@ jobs:
           echo $env:path --split ";"
           cargo build --release --target x86_64-pc-windows-msvc
         env:
-          RUSTC_WRAPPER: sccache
+          RUSTC_WRAPPER: sccache.exe
 
       - name: Results
         uses: actions/upload-artifact@v3
