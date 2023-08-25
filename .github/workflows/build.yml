@@ -137,14 +137,15 @@ jobs:
         run: |
           Invoke-WebRequest -Uri "https://github.com/mozilla/sccache/releases/download/v0.5.4/sccache-v0.5.4-x86_64-pc-windows-msvc.tar.gz" -OutFile "sccache.tar.gz"
           tar -xf sccache.tar.gz
-          .\sccache-v0.5.4-x86_64-pc-windows-msvc\sccache.exe --version
+          Move-Item -Path ".\sccache-v0.5.4-x86_64-pc-windows-msvc\sccache.exe" -Destination "$env:GITHUB_WORKSPACE"
+          echo "$env:GITHUB_WORKSPACE" | Out-File -Append -Encoding utf8 -FilePath $env:GITHUB_PATH
+          sccache --version
         shell: powershell
 
       - name: cargo build
         shell: bash
         run: |
           cd D:/a/rex-dev-server/rex-dev-server/main && cargo build --release --target x86_64-pc-windows-msvc
-
 
       - name: Check sccache stats
         run: sccache --show-stats
@@ -230,19 +231,14 @@ jobs:
       - name: install sccache
         shell: bash
         run: |
-          curl -L https://github.com/mozilla/sccache/releases/download/v0.5.4/sccache-v0.5.4-aarch64-apple-darwin.tar.gz | tar xz
-          sudo mv sccache-v0.5.4-aarch64-apple-darwin/sccache /usr/local/bin/
+          curl -L https://github.com/mozilla/sccache/releases/download/v0.5.4/sccache-v0.5.4-x86_64-apple-darwin.tar.gz | tar xz
+          sudo mv sccache-v0.5.4-x86_64-apple-darwin/sccache /usr/local/bin/
           which sccache
 
       - name: cargo build
         shell: bash
         run: |
           cd /Users/runner/work/rex-dev-server/rex-dev-server/main && cargo build --release --target aarch64-apple-darwin
-
-      - name: List dynamic dependencies for macOS binary
-        run: |
-          echo "Listing dynamic libraries for the binary:"
-          otool -L /Users/runner/work/rex-dev-server/rex-dev-server/main/target/aarch64-apple-darwin/release/rexds
         
       - name: Check sccache stats
         run: sccache --show-stats
