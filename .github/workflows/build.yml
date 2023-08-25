@@ -63,6 +63,7 @@ jobs:
     runs-on: ubuntu-latest
     env: 
       SCCACHE_BUCKET: sccache-rexds-linux-x64-musl
+      SCCACHE_ENDPOINT: ${{ secrets.SCCACHE_ENDPOINT }}
       SCCACHE_S3_USE_SSL: true
       SCCACHE_REGION: auto
       RUSTC_WRAPPER: sccache
@@ -113,6 +114,7 @@ jobs:
     runs-on: windows-latest
     env: 
       SCCACHE_BUCKET: sccache-rexds-windows-x64
+      SCCACHE_ENDPOINT: ${{ secrets.SCCACHE_ENDPOINT }}
       SCCACHE_S3_USE_SSL: true
       SCCACHE_REGION: auto
       RUSTC_WRAPPER: sccache
@@ -157,6 +159,7 @@ jobs:
     runs-on: macOS-latest
     env: 
       SCCACHE_BUCKET: sccache-rexds-darwin-x64
+      SCCACHE_ENDPOINT: ${{ secrets.SCCACHE_ENDPOINT }}
       SCCACHE_S3_USE_SSL: true
       SCCACHE_REGION: auto
       RUSTC_WRAPPER: sccache
@@ -205,6 +208,7 @@ jobs:
     runs-on: macOS-latest 
     env: 
       SCCACHE_BUCKET: sccache-rexds-darwin-arm64
+      SCCACHE_ENDPOINT: ${{ secrets.SCCACHE_ENDPOINT }}
       SCCACHE_S3_USE_SSL: true
       SCCACHE_REGION: auto
       RUSTC_WRAPPER: sccache
