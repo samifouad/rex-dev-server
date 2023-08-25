@@ -154,13 +154,10 @@ jobs:
           # Adjusting PATH for this session
           $env:PATH = "$env:GITHUB_WORKSPACE;" + $env:PATH
       
-          sccache.exe --version
-      
           cd D:/a/rex-dev-server/rex-dev-server/main
-          cargo --version
-          rustc --version
-          echo $env:path --split ";"
           cargo build --release --target x86_64-pc-windows-msvc
+
+          sccache --show-stats
         env:
           RUSTC_WRAPPER: sccache.exe
         shell: powershell
