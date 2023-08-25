@@ -138,7 +138,15 @@ jobs:
           Invoke-WebRequest -Uri "https://github.com/mozilla/sccache/releases/download/v0.5.4/sccache-v0.5.4-x86_64-pc-windows-msvc.tar.gz" -OutFile "sccache.tar.gz"
           tar -xf sccache.tar.gz
           Move-Item -Path ".\sccache-v0.5.4-x86_64-pc-windows-msvc\sccache.exe" -Destination "$env:GITHUB_WORKSPACE"
-          echo "$env:GITHUB_WORKSPACE" >> $env:GITHUB_PATH
+          # Checking the existence of sccache.exe after moving
+          if (Test-Path "$env:GITHUB_WORKSPACE\sccache.exe") {
+            Write-Output "sccache.exe is present in workspace"
+          } else {
+            Write-Output "sccache.exe is NOT present in workspace"
+            exit 1
+          }
+          # Modifying PATH directly
+          $env:PATH += ";$env:GITHUB_WORKSPACE"
           sccache --version
         shell: powershell
 
