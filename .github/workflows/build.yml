@@ -165,6 +165,14 @@ jobs:
         run: |
           cd D:/a/rex-dev-server/rex-dev-server/main
           cargo build --release --target x86_64-pc-windows-msvc
+        env: 
+          SCCACHE_BUCKET: sccache-rexds-windows-x64
+          SCCACHE_ENDPOINT: ${{ secrets.SCCACHE_ENDPOINT }}
+          SCCACHE_S3_USE_SSL: true
+          SCCACHE_REGION: auto
+          RUSTC_WRAPPER: sccache
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       - name: Check sccache stats
         run: sccache --show-stats
