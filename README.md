@@ -1,2 +1,5 @@
-# rex-dev-server
-dev server for rex frontend framework
+# rex
+
+experimental rust implementation of web app framework
+
+alpha status
